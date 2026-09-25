@@ -91,26 +91,25 @@ flowchart TD
     Norm --> C1["Conv Block 1: 32 Filters (3x3), ReLU, BatchNorm, MaxPool(2x2)"]
     C1 --> C2["Conv Block 2: 64 Filters (3x3), ReLU, BatchNorm, MaxPool(2x2)"]
     C2 --> C3["Conv Block 3: 128 Filters (3x3), ReLU, BatchNorm, MaxPool(2x2)"]
-    C3 --> Flat["Flatten Layer (32,768 Units)"]
-    Flat --> D1["Dense Hidden Layer 1 (512 Units) + ReLU + BatchNorm + Dropout(0.4)"]
-    D1 --> D2["Dense Hidden Layer 2 (256 Units) + ReLU + BatchNorm + Dropout(0.3)"]
-    D2 --> D3["Dense Hidden Layer 3 (128 Units) + ReLU + Dropout(0.2)"]
-    D3 --> Out["Output Layer: Dense(4 Units) + Softmax Activation"]
+    C3 --> GAP["Global Average Pooling 2D (128 Units)"]
+    GAP --> D1["Dense Hidden Layer 1 (128 Units) + ReLU + L2 Reg + BatchNorm + Dropout(0.3)"]
+    D1 --> D2["Dense Hidden Layer 2 (64 Units) + ReLU + Dropout(0.2)"]
+    D2 --> Out["Output Layer: Dense(4 Units) + Softmax Activation"]
 ```
 
-### 4.1 Layer Breakdown
+### 4.1 Layer Breakdown & Parameter Efficiency
 
 1. **Input Layer:**
    - Dimensions: `(128, 128, 3)`. Accepts standard 3-channel RGB image arrays.
-2. **Hidden Feature Extraction & Dense Layers:**
+2. **Hidden Feature Extraction & Spatial Pooling:**
    - **Convolutional Extraction Blocks:** Three blocks with increasing filter depths (32 $\rightarrow$ 64 $\rightarrow$ 128) using small $3 \times 3$ receptive fields extract edges, textures, and material contours.
-   - **Deep Dense Layer 1 (512 units):** Reconstructs global spatial combinations of extracted waste features.
-   - **Deep Dense Layer 2 (256 units):** Refines high-level abstraction across classes.
-   - **Deep Dense Layer 3 (128 units):** Prepares compressed decision boundaries.
+   - **Global Average Pooling 2D (Structural Regularizer):** Replaces traditional, parameter-heavy `Flatten` layers (which explode to over 16.7 million parameters). By spatially averaging each $16 \times 16$ feature map into a single scalar, total parameters drop from **17M down to ~125K**, eliminating memorization and preventing overfitting on compact datasets.
+   - **Deep Dense Layer 1 (128 units):** Integrates global spatial feature representations with $L_2$ weight regularization ($1 \times 10^{-4}$).
+   - **Deep Dense Layer 2 (64 units):** Compresses high-level abstractions into discriminative class features.
 3. **Activation Functions & Regularization:**
    - **ReLU (Rectified Linear Unit):** $f(x) = \max(0, x)$ is utilized across all hidden layers to prevent vanishing gradients and accelerate convergence.
    - **Batch Normalization:** Stabilizes learning dynamics by zero-centering and scaling activations between intermediate layers.
-   - **Dropout (0.2 to 0.4):** Randomly zeroes out neurons during training passes, preventing co-adaptation and eliminating overfitting on small sample sizes.
+   - **Dropout (0.2 & 0.3):** Randomly zeroes out neurons during training passes to encourage redundant feature representations.
 4. **Output Layer:**
    - **4 Neurons:** Directly corresponds to `[Paper, Plastic, Metal, Organic]`.
    - **Softmax Activation:** Converts raw unnormalized logits $z_i$ into a normalized probability distribution where $\sum_{i=1}^4 P(y=i|x) = 1.0$:
