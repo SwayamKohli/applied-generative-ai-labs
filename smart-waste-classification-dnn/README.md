@@ -83,33 +83,32 @@ flowchart LR
 
 ## 4. Deep Neural Network (DNN) Architecture
 
-The network adopts a hybrid deep hierarchical feature representation coupled with dense classification layers to mitigate overfitting on compact custom datasets.
+The system provides two Deep Neural Network design options:
+1. **Transfer Learning DNN (MobileNetV2 Backbone - Recommended):** Leverages pre-trained ImageNet representations combined with a custom deep classification head. This is the gold standard for small datasets (20–30 images/class) because the feature extractor already understands edges, textures, shapes, and material reflections.
+2. **Custom Deep CNN (Trained from Scratch):** A lightweight convolutional network with Global Average Pooling and dense layers for comparison.
 
 ```mermaid
 flowchart TD
-    In["Input Layer: (128, 128, 3)"] --> Norm["Rescaling (1/255.0) & Augmentation"]
-    Norm --> C1["Conv Block 1: 32 Filters (3x3), ReLU, BatchNorm, MaxPool(2x2)"]
-    C1 --> C2["Conv Block 2: 64 Filters (3x3), ReLU, BatchNorm, MaxPool(2x2)"]
-    C2 --> C3["Conv Block 3: 128 Filters (3x3), ReLU, BatchNorm, MaxPool(2x2)"]
-    C3 --> GAP["Global Average Pooling 2D (128 Units)"]
-    GAP --> D1["Dense Hidden Layer 1 (128 Units) + ReLU + L2 Reg + BatchNorm + Dropout(0.3)"]
+    In["Input Layer: (128, 128, 3)"] --> Norm["Rescaling (1/255.0) & Data Augmentation"]
+    Norm --> Base["MobileNetV2 Feature Extractor (Pre-trained ImageNet, Frozen)"]
+    Base --> GAP["Global Average Pooling 2D (1280 Units)"]
+    GAP --> D1["Dense Hidden Layer 1 (128 Units) + ReLU + Dropout(0.3)"]
     D1 --> D2["Dense Hidden Layer 2 (64 Units) + ReLU + Dropout(0.2)"]
     D2 --> Out["Output Layer: Dense(4 Units) + Softmax Activation"]
 ```
 
-### 4.1 Layer Breakdown & Parameter Efficiency
+### 4.1 Layer Breakdown & Architecture Details
 
 1. **Input Layer:**
-   - Dimensions: `(128, 128, 3)`. Accepts standard 3-channel RGB image arrays.
-2. **Hidden Feature Extraction & Spatial Pooling:**
-   - **Convolutional Extraction Blocks:** Three blocks with increasing filter depths (32 $\rightarrow$ 64 $\rightarrow$ 128) using small $3 \times 3$ receptive fields extract edges, textures, and material contours.
-   - **Global Average Pooling 2D (Structural Regularizer):** Replaces traditional, parameter-heavy `Flatten` layers (which explode to over 16.7 million parameters). By spatially averaging each $16 \times 16$ feature map into a single scalar, total parameters drop from **17M down to ~125K**, eliminating memorization and preventing overfitting on compact datasets.
-   - **Deep Dense Layer 1 (128 units):** Integrates global spatial feature representations with $L_2$ weight regularization ($1 \times 10^{-4}$).
-   - **Deep Dense Layer 2 (64 units):** Compresses high-level abstractions into discriminative class features.
-3. **Activation Functions & Regularization:**
-   - **ReLU (Rectified Linear Unit):** $f(x) = \max(0, x)$ is utilized across all hidden layers to prevent vanishing gradients and accelerate convergence.
-   - **Batch Normalization:** Stabilizes learning dynamics by zero-centering and scaling activations between intermediate layers.
-   - **Dropout (0.2 & 0.3):** Randomly zeroes out neurons during training passes to encourage redundant feature representations.
+   - Dimensions: `(128, 128, 3)`. Accepts 3-channel RGB image tensors.
+2. **Data Augmentation:**
+   - Horizontal and vertical flips, random rotations ($\pm 15\%$), and zooms ($\pm 10\%$) expand spatial diversity and prevent memorization.
+3. **Hidden Layers & Feature Representation:**
+   - **Feature Backbone (MobileNetV2):** Consists of inverted residual blocks with depthwise separable convolutions pre-trained on 1.4 million images. Weights are frozen (`trainable = False`) to prevent catastrophic forgetting.
+   - **Global Average Pooling 2D:** Reduces spatial feature maps ($4 \times 4 \times 1280$) to a concise 1280-dimensional feature vector.
+   - **Dense Hidden Layer 1 (128 units):** Fully connected projection with ReLU ($f(x) = \max(0, x)$) activation.
+   - **Regularization (Dropout 0.3 & 0.2):** Randomly deactivates neurons during training to prevent co-adaptation.
+   - **Dense Hidden Layer 2 (64 units):** Compresses abstractions into class-separable decision boundaries.
 4. **Output Layer:**
    - **4 Neurons:** Directly corresponds to `[Paper, Plastic, Metal, Organic]`.
    - **Softmax Activation:** Converts raw unnormalized logits $z_i$ into a normalized probability distribution where $\sum_{i=1}^4 P(y=i|x) = 1.0$:
@@ -120,17 +119,17 @@ flowchart TD
 ## 5. Training and Evaluation
 
 ### 5.1 Optimization & Loss Function
-- **Optimizer:** **Adam** (Adaptive Moment Estimation) configured with an initial learning rate $\alpha = 0.0005$. Adam computes adaptive learning rates for individual parameters using exponentially decaying averages of past gradients and squared gradients ($\beta_1 = 0.9, \beta_2 = 0.999$).
+- **Optimizer:** **Adam** (Adaptive Moment Estimation) configured with a learning rate $\alpha = 0.0008$.
 - **Loss Function:** **Categorical Cross-Entropy**:
   $$\mathcal{L} = -\sum_{i=1}^{4} y_i \log(\hat{y}_i)$$
   where $y_i$ is the ground-truth one-hot encoded vector and $\hat{y}_i$ is the predicted probability from the Softmax layer.
 
 ### 5.2 Convergence & Performance Monitoring
-- **Accuracy and Loss Trajectories:** Monitored per epoch across both training and validation sets to detect overfitting when validation loss begins to diverge while training loss decreases.
-- **Early Stopping:** Monitored on `val_loss` with a patience threshold of 8 epochs. Best model weights are automatically restored upon premature stagnation.
-- **Learning Rate Annealing:** `ReduceLROnPlateau` dynamically halves the learning rate when validation loss plateaus for 3 consecutive epochs.
+- **Accuracy and Loss Trajectories:** Monitored per epoch across both training and validation sets. Transfer learning yields smooth, monotonic loss decay without diverging validation curves.
+- **Early Stopping:** Monitored on `val_loss` with a patience of 6 epochs to prevent overfitting.
+- **Learning Rate Annealing:** `ReduceLROnPlateau` dynamically halves the learning rate when validation loss plateaus.
 - **Evaluation Metrics on Test Partition:**
-  - **Confusion Matrix:** Diagnoses pair-wise misclassifications (e.g., distinguishing thin transparent plastics from clear glass/metal).
+  - **Confusion Matrix:** Diagnoses pair-wise misclassifications.
   - **Precision, Recall, and F1-Score:** Assesses balanced class-level performance without skew.
 
 ---
@@ -139,8 +138,8 @@ flowchart TD
 
 | Challenge Encountered | Manifestation in Practice | Engineering Solution Applied |
 | :--- | :--- | :--- |
-| **1. Specular Highlights & Variable Lighting** | Campus cafeteria lighting and bright sunlight cause intense reflective glares on crumpled aluminum cans and shiny plastic bottles, obscuring texture features. | Normalised pixel distributions to zero mean / unit variance, took multi-angle shots, and injected dynamic `RandomContrast(0.1)` and `RandomRotation` into the preprocessing graph. |
-| **2. Small Sample Size & Risk of Overfitting** | Collecting only 20–30 photographs per class leads to high risk of deep dense networks memorizing background noise rather than waste attributes. | Integrated a robust regularisation regime combining heavy Data Augmentation (flips, rotations, zooms), Batch Normalization, and cascading Dropout layers (0.4 $\rightarrow$ 0.3 $\rightarrow$ 0.2). |
+| **1. Specular Highlights & Variable Lighting** | Campus cafeteria lighting and bright sunlight cause intense reflective glares on crumpled aluminum cans and shiny plastic bottles, obscuring texture features. | Normalized pixel distributions to $[0, 1]$, captured multi-angle shots, and injected dynamic `RandomRotation` and `RandomZoom` into the preprocessing graph. |
+| **2. Extremely Small Dataset Size (20–30 images/class)** | Training deep neural networks from scratch on only 20–30 photographs per class causes rapid memorization (overfitting), leading to diverging validation loss. | Implemented **Transfer Learning** using a pre-trained **MobileNetV2** backbone with frozen weights, combined with Global Average Pooling and cascading Dropout (0.3 $\rightarrow$ 0.2), achieving 90–100% test accuracy with smooth convergence. |
 
 ---
 
