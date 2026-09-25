@@ -1,0 +1,152 @@
+[
+  {
+    "id": 1,
+    "category": "PEFT",
+    "question": "What is LoRA (Low-Rank Adaptation) and how does it reduce memory consumption during LLM fine-tuning?",
+    "answer": "LoRA freezes the pre-trained model weights W_0 and injects trainable rank-decomposition matrices A and B into transformer attention layers, such that W = W_0 + (alpha / r) * B * A. For a weight matrix of dimension d x k, full fine-tuning requires updating d * k parameters, whereas LoRA only updates r * (d + k) parameters where rank r << min(d, k). This reduces trainable parameters by 99% and slashes optimizer memory state requirements by up to 75%."
+  },
+  {
+    "id": 2,
+    "category": "PEFT",
+    "question": "What is the relationship between LoRA rank (r) and scaling factor (alpha)?",
+    "answer": "In LoRA, rank (r) controls the low-rank bottleneck dimension of the adapter matrices, while alpha acts as a constant scaling factor such that the adapted update is scaled by (alpha / r). When experimenting with different ranks, setting alpha = 2 * r maintains a consistent learning rate scale. A higher rank (e.g., r = 16 or 32) captures more task-specific complexity, whereas lower rank (r = 4 or 8) minimizes memory footprint."
+  },
+  {
+    "id": 3,
+    "category": "PEFT",
+    "question": "Which transformer attention layers should be targeted with LoRA adapters for best performance?",
+    "answer": "Initially, LoRA was applied solely to query (q_proj) and value (v_proj) projection layers. However, recent empirical studies show that targeting all linear layers in the transformer block (q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, and down_proj) yields significantly higher task adaptation accuracy with only a marginal increase in parameter count, outperforming larger ranks applied to query/value projections alone."
+  },
+  {
+    "id": 4,
+    "category": "Inference Optimization",
+    "question": "How does KV Caching accelerate autoregressive LLM text generation?",
+    "answer": "During autoregressive decoding, an LLM predicts one token at a time. Without KV caching, the model must recompute key and value representations for all preceding tokens at every generation step, leading to O(N^2) complexity. The KV Cache stores the calculated key and value tensors of prior tokens in GPU memory, allowing each new step to compute only the single incoming token's representation with O(1) attention computation per step."
+  },
+  {
+    "id": 5,
+    "category": "Inference Optimization",
+    "question": "What is FlashAttention and why is it faster than standard multi-head self-attention?",
+    "answer": "FlashAttention is an exact, hardware-aware attention algorithm that optimizes memory access between GPU High-Bandwidth Memory (HBM) and fast on-chip SRAM. Standard attention writes the intermediate N x N attention matrix to HBM, incurring severe memory bandwidth bottlenecks. FlashAttention uses tiling and online softmax rescaling to compute attention in chunks within SRAM, reducing memory traffic by 3x to 5x and avoiding O(N^2) HBM storage."
+  },
+  {
+    "id": 6,
+    "category": "Quantization",
+    "question": "What is QLoRA and how does it differ from standard LoRA?",
+    "answer": "QLoRA combines 4-bit NormalFloat (NF4) base model quantization with Double Quantization (DQ) and Paged Optimizers, then attaches 16-bit LoRA adapter weights. While standard LoRA loads the base model in 16-bit float, QLoRA compresses the base weights to 4 bits, allowing a 33B or 65B parameter LLM to be fine-tuned on a single consumer GPU without compromising downstream task accuracy."
+  },
+  {
+    "id": 7,
+    "category": "Training Mechanics",
+    "question": "Why is label masking with -100 crucial during instruction fine-tuning?",
+    "answer": "In causal language modeling, cross-entropy loss is computed token-by-token. In instruction tuning, the model should only be penalized for predicting incorrect response tokens, not for the prompt or system instructions. PyTorch's CrossEntropyLoss ignores tokens labeled with index -100. Masking all prompt tokens with -100 ensures gradients are backpropagated exclusively based on the assistant's generated output."
+  },
+  {
+    "id": 8,
+    "category": "Training Mechanics",
+    "question": "What is catastrophic forgetting in LLMs and how does parameter-efficient fine-tuning prevent it?",
+    "answer": "Catastrophic forgetting occurs when a neural network fine-tuned on a narrow domain completely overwrites the broad knowledge acquired during pre-training. Parameter-efficient fine-tuning (like LoRA) prevents this by freezing 100% of the original pre-trained weights W_0. Because the base model remains entirely untouched, general reasoning capabilities remain preserved while task-specific skills are isolated in the lightweight adapter."
+  },
+  {
+    "id": 9,
+    "category": "Alignment & Evaluation",
+    "question": "What is Direct Preference Optimization (DPO) and how does it improve upon traditional RLHF?",
+    "answer": "Traditional RLHF requires training a separate reward model followed by PPO reinforcement learning, which is computationally expensive and unstable. Direct Preference Optimization (DPO) mathematically reparameterizes the reward function directly in terms of the policy model probabilities, optimizing a simple binary cross-entropy loss over chosen vs. rejected response pairs without requiring a reward model or reinforcement learning loop."
+  },
+  {
+    "id": 10,
+    "category": "RAG Architectures",
+    "question": "What is the difference between dense retrieval and sparse retrieval in RAG systems?",
+    "answer": "Sparse retrieval (e.g., BM25, TF-IDF) relies on exact lexical token matching and term frequencies, excelling at keyword lookups, part numbers, and acronyms. Dense retrieval uses continuous vector embeddings from neural encoders to capture semantic meaning and intent, finding relevant documents even when zero identical keywords are shared. Hybrid search combines both using Reciprocal Rank Fusion (RRF) for optimal recall."
+  },
+  {
+    "id": 11,
+    "category": "Inference Optimization",
+    "question": "What is PagedAttention and how does it solve memory fragmentation in LLM serving?",
+    "answer": "In multi-tenant LLM serving, dynamic sequence lengths cause the KV Cache to consume large, contiguous blocks of GPU memory, resulting in up to 60-80% memory fragmentation and waste. PagedAttention, introduced by vLLM, borrows the virtual memory paging concept from operating systems by partitioning the KV cache into fixed-size virtual blocks stored non-contiguously in physical memory, increasing serving throughput by 2x to 4x."
+  },
+  {
+    "id": 12,
+    "category": "Inference Optimization",
+    "question": "How does Speculative Decoding speed up LLM token generation?",
+    "answer": "Speculative Decoding uses a lightweight draft model to generate K candidate tokens sequentially, which are then verified in parallel in a single forward pass by the large target LLM. If the target model accepts the draft tokens, multiple tokens are produced per forward pass. Because memory bandwidth rather than computation dominates decoding, speculative decoding delivers a 2x to 3x speedup with zero degradation in mathematical output distribution."
+  },
+  {
+    "id": 13,
+    "category": "Quantization",
+    "question": "What is the difference between Post-Training Quantization (PTQ) and Quantization-Aware Training (QAT)?",
+    "answer": "Post-Training Quantization (PTQ, e.g., GPTQ, AWQ) quantizes a fully trained model's weights from FP16 to INT8 or INT4 after training using a small calibration dataset without backpropagation. Quantization-Aware Training (QAT) simulates low-precision quantization errors during the forward pass and adjusts full-precision weights during training, producing higher accuracy at low bitwidths (e.g., 2-bit or 3-bit) at the cost of higher training compute."
+  },
+  {
+    "id": 14,
+    "category": "Training Mechanics",
+    "question": "What is gradient accumulation and when should it be used?",
+    "answer": "Gradient accumulation simulates a larger effective batch size when GPU memory constraints prevent fitting the full batch. Instead of updating optimizer weights at every micro-batch, gradients are accumulated across N forward and backward passes via loss = loss / N, and optimizer.step() is called once every N iterations. This stabilizes training dynamics on resource-constrained GPUs without OOM errors."
+  },
+  {
+    "id": 15,
+    "category": "Alignment & Evaluation",
+    "question": "What is perplexity in language modeling and how is it calculated?",
+    "answer": "Perplexity is the exponentiated average negative log-likelihood of a sequence, defined as PPL = exp(-1/N * sum(log P(w_i | w_<i))). Intuitively, it represents the geometric mean of the number of equally likely tokens the model is choosing between at each step. A lower perplexity indicates the model is more confident and predictive of the test text."
+  },
+  {
+    "id": 16,
+    "category": "PEFT",
+    "question": "What is Prefix Tuning and how does it compare to LoRA?",
+    "answer": "Prefix Tuning prepends trainable, continuous virtual token vectors to the key and value states of every transformer layer, keeping the base model parameters frozen. While Prefix Tuning alters the effective sequence length and consumes context window space, LoRA preserves the original sequence length by adding parallel low-rank weight updates directly to the weight projection matrices, making LoRA more compute-efficient and easier to deploy."
+  },
+  {
+    "id": 17,
+    "category": "RAG Architectures",
+    "question": "What role does a Cross-Encoder Re-ranker play in a RAG pipeline?",
+    "answer": "A Bi-Encoder generates isolated document embeddings for fast approximate nearest neighbor search over millions of items, but lacks cross-attention between query and text. A Cross-Encoder Re-ranker takes the top 20-50 retrieved candidates and passes the concatenated (query, passage) pair through full cross-attention layers, computing precise relevance scores that filter out false positives before LLM context injection."
+  },
+  {
+    "id": 18,
+    "category": "Training Mechanics",
+    "question": "Why is a warmup schedule combined with cosine learning rate decay standard for LLM fine-tuning?",
+    "answer": "At the start of fine-tuning, newly initialized adapter weights produce high gradients that can disrupt early training stability. A linear warmup gradually increases the learning rate from 0 to peak over the initial 5-10% of steps. Cosine decay then smoothly decreases the learning rate toward a small minimum, allowing the optimizer to settle into narrow, high-generalization minima without sudden learning rate shocks."
+  },
+  {
+    "id": 19,
+    "category": "Quantization",
+    "question": "What is Activation-aware Weight Quantization (AWQ)?",
+    "answer": "AWQ observes that not all weights in an LLM are equally important: protecting only the top 1% of salient weight channels based on activation magnitudes preserves downstream model performance. Instead of quantizing all weights uniformly, AWQ applies per-channel scaling factors derived from activation distributions before quantizing to 4-bit INT, outperforming traditional RTN (round-to-nearest) quantization."
+  },
+  {
+    "id": 20,
+    "category": "Inference Optimization",
+    "question": "What is Continuous Batching (Iteration-level Scheduling) in LLM inference servers?",
+    "answer": "Traditional static batching processes a batch until the longest sequence completes generation, leaving GPU resources idle as shorter sequences finish early. Continuous batching (used in vLLM and TGI) schedules decoding at the individual token iteration level. As soon as a request emits an EOS token, it is evicted from the batch and a new incoming request immediately takes its place, boosting throughput by up to 10x."
+  },
+  {
+    "id": 21,
+    "category": "Training Mechanics",
+    "question": "How does RMSNorm differ from standard Layer Normalization?",
+    "answer": "LayerNorm normalizes hidden states using both mean and variance: (x - mean) / sqrt(var + eps) * gamma + beta. RMSNorm simplifies this by hypothesizing that mean-centering is unnecessary, scaling activations purely by their root mean square: x / sqrt(mean(x^2) + eps) * gamma. Eliminating mean calculation reduces compute overhead by 10-50% per normalization layer without sacrificing model training stability."
+  },
+  {
+    "id": 22,
+    "category": "PEFT",
+    "question": "Can LoRA weights be merged back into the original base model for zero-overhead inference?",
+    "answer": "Yes. Because LoRA adapter updates are linear transformations, the trained adapter matrices can be folded directly into the base weights via W_merged = W_0 + (alpha / r) * (B @ A). Once merged, the model has the exact same architecture and inference latency as the original base model, requiring zero additional adapter computation during serving."
+  },
+  {
+    "id": 23,
+    "category": "Alignment & Evaluation",
+    "question": "What is Constitutional AI (RLAIF) and how does it replace human feedback?",
+    "answer": "Constitutional AI, pioneered by Anthropic, uses an AI model guided by a set of constitutional principles or rules to critique and revise its own outputs, followed by training preference models on the self-revised pairs. This replaces costly human labeling with automated AI-generated critique and supervision (Reinforcement Learning from AI Feedback - RLAIF)."
+  },
+  {
+    "id": 24,
+    "category": "RAG Architectures",
+    "question": "Why is sliding-window chunking with overlap superior to fixed-size naive chunking?",
+    "answer": "Fixed-size naive chunking risks severing key factual relationships across arbitrary token boundaries (e.g., splitting a question from its answer or a condition from its rule). Sliding-window chunking with overlap (e.g., 500 tokens with 100 token overlap) ensures that sentences bordering a chunk boundary are replicated in adjacent chunks, preserving semantic continuity and retrieval completeness."
+  },
+  {
+    "id": 25,
+    "category": "Training Mechanics",
+    "question": "What is the purpose of RoPE (Rotary Position Embedding) in modern LLMs?",
+    "answer": "RoPE encodes token position by rotating the query and key representations in the complex 2D plane by an angle proportional to their absolute position. When computing inner products in self-attention, the dot product between query at position m and key at position n naturally depends only on the relative distance (m - n), enabling superior length generalization across long sequence contexts."
+  }
+]

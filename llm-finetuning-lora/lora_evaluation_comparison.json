@@ -1,0 +1,30 @@
+[
+  {
+    "question_id": 1,
+    "topic": "PEFT Hyperparameter Tuning",
+    "question": "What is the difference between LoRA rank and alpha, and how should they be chosen?",
+    "original_base_model_response": "LoRA rank (LoRaWAN) and alpha (LoRa) are two different radio frequency (RF) standards used in the LoRa technology. LoRa rank is a standard used for LoRaWAN networks, while alpha is used for LoRa networks.\n\nLoRa rank is a lower-power version of LoRaWAN that is designed for low-power applications. It uses a lower frequency (12.5 kHz) and shorter data rate (125 kbps) compared to LoRaWAN. LoRa rank is suitable for applications that require low power consumption and require a smaller antenna size.\n\nOn the other hand, alpha",
+    "finetuned_lora_model_response": "LoRA rank is a metric that measures the similarity between the top-ranked query and the top-ranked document. alpha is a hyperparameter that controls the relative importance of the query and document scores. A high alpha value (e.g., 10) means that the query and document scores are equally weighted. A low alpha value (e.g., 0.1) means that the query score is more important than the document score."
+  },
+  {
+    "question_id": 2,
+    "topic": "Transformer Inference Optimization",
+    "question": "How does KV Caching reduce computational complexity during autoregressive text generation?",
+    "original_base_model_response": "KV Caching is a technique used in autoregressive text generation to reduce computational complexity. It involves caching the most recent KV pairs (key-value pairs) in memory to speed up the generation process.\n\nThe idea behind KV Caching is to store the most recent KV pairs in memory, which can be accessed quickly when generating new words. This reduces the need to repeatedly compute the KV pairs, which can be computationally expensive.\n\nBy caching the most recent KV pairs, autoregressive text generation can generate words more quickly, leading to improved performance and efficiency. This technique can also help to reduce memory usage and improve the overall performance of the system.",
+    "finetuned_lora_model_response": "KV Caching reduces computational complexity by caching the intermediate results of the autoregressive decoder, which are only used once during the autoregressive generation. This reduces the number of intermediate computations required by the autoregressive decoder, and thus reduces the computational complexity of autoregressive generation."
+  },
+  {
+    "question_id": 3,
+    "topic": "Loss Computation & Training Mechanics",
+    "question": "Why is label masking with -100 used when training an LLM on instruction datasets?",
+    "original_base_model_response": "Label masking with -100 is used when training an LLM on instruction datasets because it helps the LLM to learn the correct label for each input token. In the case of instruction datasets, the labels are usually provided as one-hot vectors, where each element represents the label for a specific token. When the LLM is trained on these one-hot vectors, it can easily distinguish between the correct label and the incorrect label, which can help it to learn the correct label for each input token.\n\nHowever, when the LLM is trained on a large corpus of unlabeled text, it may encounter instances where the correct label is not provided for a specific token. In such cases, label masking with -1",
+    "finetuned_lora_model_response": "Label masking with -100 is used to prevent the LLM from predicting the target token when the input token is not in the vocabulary. This prevents the LLM from predicting the target token when the input token is not in the training data."
+  },
+  {
+    "question_id": 4,
+    "topic": "Quantization & Memory Efficiency",
+    "question": "What are the primary differences between standard LoRA and QLoRA?",
+    "original_base_model_response": "There are several differences between LoRA (Low-Power Wide-Area Network) and QLoRA (Quadruple LoRa):\n\n1. Bandwidth: LoRA operates in the 915 MHz to 928 MHz band, while QLoRA operates in the 868 MHz to 915 MHz band.\n\n2. Frequency: LoRA operates at 868 MHz, while QLoRA operates at 915 MHz.\n\n3. Data rate: LoRA operates at a data rate of 125 kbps, while QLoRA operates at a data rate of",
+    "finetuned_lora_model_response": "QLoRA uses a quadratic loss function, while standard LoRA uses a linear loss function. QLoRA also uses a quadratic regularization term, while standard LoRA uses a linear regularization term."
+  }
+]
