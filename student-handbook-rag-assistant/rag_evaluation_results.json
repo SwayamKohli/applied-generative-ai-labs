@@ -1,0 +1,80 @@
+[
+  {
+    "query_id": 1,
+    "question": "What is the minimum attendance requirement for appearing in the end-semester examination?",
+    "generated_answer": "1.1 Minimum Attendance Requirement: All undergraduate and postgraduate students are strictly required to maintain a minimum of 75% attendance in each registered course (theory lectures, practical lab sessions, and tutorials) during the semester in order to be eligible to appear for the End-Semester Final Examination.",
+    "retrieved_pages": [
+      1,
+      1
+    ],
+    "top_similarity_score": 0.7952,
+    "expected_page": 1,
+    "verification_status": "\u2705 SUPPORTED BY PDF",
+    "latency_seconds": 0.031
+  },
+  {
+    "query_id": 2,
+    "question": "How many days of academic leave can a student apply for?",
+    "generated_answer": "4.2 Application and Approval Workflow: Students must apply for Academic Leave at least 5 working days in advance of the scheduled event.",
+    "retrieved_pages": [
+      4,
+      4
+    ],
+    "top_similarity_score": 0.8044,
+    "expected_page": 4,
+    "verification_status": "\u2705 SUPPORTED BY PDF",
+    "latency_seconds": 0.081
+  },
+  {
+    "query_id": 3,
+    "question": "What are the rules for examination misconduct?",
+    "generated_answer": "2.3 Classification of Examination Misconduct & Penalties: - Category I (Minor Misconduct): Possession of unauthorized handwritten notes or formulas without evidence of active use. Penalty: Immediate cancellation of that specific course examination.",
+    "retrieved_pages": [
+      2,
+      2
+    ],
+    "top_similarity_score": 0.7251,
+    "expected_page": 2,
+    "verification_status": "\u2705 SUPPORTED BY PDF",
+    "latency_seconds": 0.007
+  },
+  {
+    "query_id": 4,
+    "question": "What are the library timings?",
+    "generated_answer": "5.1 Central Library Operating Hours: The university central library is a state-of-the-art learning hub supporting physical and digital research.; Regular Weekdays (Monday through Friday): 8:00 AM to 11:00 PM; Weekends (Saturday and Sunday): 9:00 AM to 5:00 PM; Gazetted University Holidays: 9:00 AM to 1:00 PM (Reading Section only); During End-Semester Examination Weeks: Overnight Reading Hall open 24 Hours continuously.",
+    "retrieved_pages": [
+      5,
+      5
+    ],
+    "top_similarity_score": 0.5339,
+    "expected_page": 5,
+    "verification_status": "\u2705 SUPPORTED BY PDF",
+    "latency_seconds": 0.007
+  },
+  {
+    "query_id": 5,
+    "question": "What is the grading policy and the minimum CGPA required to graduate?",
+    "generated_answer": "A minimum Cumulative Grade Point Average (CGPA) of 5.00 is strictly required for the award of degree. 3.2 Semester & Cumulative Grade Calculation (SGPA & CGPA): The Semester Grade Point Average (SGPA) is computed as the sum of (Course Credits * Grade Points) divided by the total registered credits for the semester.",
+    "retrieved_pages": [
+      3,
+      3
+    ],
+    "top_similarity_score": 0.7048,
+    "expected_page": 3,
+    "verification_status": "\u2705 SUPPORTED BY PDF",
+    "latency_seconds": 0.006
+  },
+  {
+    "query_id": 6,
+    "question": "Can students bring pets or personal electric scooters into the lecture hall?",
+    "generated_answer": "The provided student handbook does not contain information regarding this query.",
+    "retrieved_pages": [
+      6,
+      2
+    ],
+    "top_similarity_score": 0.4326,
+    "expected_page": null,
+    "verification_status": "\u2705 CORRECTLY REFUSED (ZERO HALLUCINATION)",
+    "latency_seconds": 0.006
+  }
+]

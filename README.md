@@ -19,6 +19,7 @@ Every experiment in this repository is built to be:
 | Module / Practical | Focus Area | Frameworks / Tools | Status | Documentation & Code |
 | :--- | :--- | :--- | :---: | :---: |
 | **Smart Waste Classification Using Deep Neural Network** | Computer Vision, Custom Dataset Pipeline, Multi-class Classification, DNN Regularization | TensorFlow / Keras, Scikit-Learn, Matplotlib | ✅ Completed | [Explore Module](./smart-waste-classification-dnn/) |
+| **University Student Handbook Mini-RAG Assistant** | Retrieval-Augmented Generation (RAG), Semantic Vector Search, Document Grounding, Anti-Hallucination | Sentence-Transformers, FAISS, Flan-T5, PyPDF | ✅ Completed | [Explore Module](./student-handbook-rag-assistant/) |
 
 ---
 
@@ -28,9 +29,15 @@ Every experiment in this repository is built to be:
 applied-generative-ai-labs/
 ├── README.md                                    # Master repository index
 ├── .gitignore                                   # Standard deep learning gitignore
-└── smart-waste-classification-dnn/              # Lab: Smart Waste Classification
-    ├── README.md                                # Comprehensive 1-page report & theory
-    └── waste_classification_dnn.py              # Colab-ready self-contained Python script
+├── smart-waste-classification-dnn/              # Lab 1: Smart Waste Classification
+│   ├── README.md                                # Comprehensive 1-page report & theory
+│   └── waste_classification_dnn.py              # Colab-ready self-contained Python script
+└── student-handbook-rag-assistant/              # Lab 2: Student Handbook Mini-RAG
+    ├── README.md                                # Comprehensive architectural report & verification
+    ├── handbook_rag_assistant.py                # Self-contained end-to-end RAG script
+    ├── student_handbook.pdf                     # Official 6-page University Handbook PDF
+    ├── rag_evaluation_results.json              # Machine-readable benchmark audit results
+    └── vector_store/                            # Serialized vector embeddings & metadata
 ```
 
 ---
