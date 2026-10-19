@@ -1,0 +1,39 @@
+{
+  "task": "Pix2Pix Image-to-Image Domain Translation",
+  "framework": "PyTorch Conditional GAN (Pix2Pix)",
+  "resolution": "128x128x3",
+  "domains": {
+    "domain_a": "Architectural Edge Sketches (Binary Contours)",
+    "domain_b": "Textured Photorealistic Scenes"
+  },
+  "training_hyperparameters": {
+    "epochs": 10,
+    "batch_size": 16,
+    "learning_rate": 0.0002,
+    "beta1": 0.5,
+    "beta2": 0.999,
+    "lambda_l1": 100.0,
+    "generator_architecture": "5-Stage U-Net with Skip Connections",
+    "discriminator_architecture": "70x70 Markovian PatchGAN"
+  },
+  "test_evaluation_metrics": {
+    "mean_l1_pixel_error_mae": 0.3118,
+    "peak_signal_to_noise_ratio_psnr_db": 14.11,
+    "final_discriminator_loss": 0.3452,
+    "final_generator_adversarial_loss": 2.5787,
+    "final_generator_l1_loss": 0.3154,
+    "final_generator_total_loss": 34.1158
+  },
+  "epoch_training_history": [
+    {"epoch": 1, "d_loss": 0.3633, "g_total": 41.6639, "g_adv": 1.8682, "g_l1": 0.3980},
+    {"epoch": 2, "d_loss": 0.0898, "g_total": 37.7686, "g_adv": 3.6849, "g_l1": 0.3408},
+    {"epoch": 3, "d_loss": 0.2583, "g_total": 36.9095, "g_adv": 3.1632, "g_l1": 0.3375},
+    {"epoch": 4, "d_loss": 0.1085, "g_total": 36.8149, "g_adv": 3.9137, "g_l1": 0.3290},
+    {"epoch": 5, "d_loss": 0.1759, "g_total": 36.2412, "g_adv": 3.4745, "g_l1": 0.3277},
+    {"epoch": 6, "d_loss": 0.1839, "g_total": 35.6393, "g_adv": 3.3363, "g_l1": 0.3230},
+    {"epoch": 7, "d_loss": 0.1312, "g_total": 35.7216, "g_adv": 3.3656, "g_l1": 0.3236},
+    {"epoch": 8, "d_loss": 0.1858, "g_total": 36.0005, "g_adv": 3.4435, "g_l1": 0.3256},
+    {"epoch": 9, "d_loss": 0.3049, "g_total": 35.4553, "g_adv": 2.8983, "g_l1": 0.3256},
+    {"epoch": 10, "d_loss": 0.3452, "g_total": 34.1158, "g_adv": 2.5787, "g_l1": 0.3154}
+  ]
+}

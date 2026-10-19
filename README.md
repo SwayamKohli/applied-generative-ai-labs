@@ -25,8 +25,9 @@ Every project in this repository is built to be:
 | **ANN Multi-Class Classification with Back-Propagation** | Multi-Class Vectorized Backpropagation, Softmax Jacobian, Categorical Cross-Entropy, Adam | Python, NumPy, Scikit-Learn, Matplotlib | ✅ Completed | [Explore Module](./ann-multiclass-classification-backprop/) |
 | **CNN Image Classification with Hyperparameter Tuning** | Deep CNN Architecture, Batch Normalization, Hyperparameter Search, Fashion-MNIST, PyTorch | PyTorch, Torchvision, NumPy, Matplotlib | ✅ Completed | [Explore Module](./cnn-image-classification-hyperparameter-tuning/) |
 | **Pre-trained CNN Architectures Benchmark** | Transfer Learning, AlexNet, VGG-16, InceptionNet, ResNet-50, Inference Latency, Top-1/Top-5 | PyTorch, Torchvision, NumPy, Matplotlib | ✅ Completed | [Explore Module](./pretrained-cnn-models-comparison/) |
-| **Autoencoder for Semantic Image Segmentation** | Encoder-Decoder Network, Transposed Convolutions, Soft Dice + BCE Loss, mIoU / Dice Evaluation | PyTorch, NumPy, Matplotlib | ✅ Completed | [Explore Module](./autoencoder-image-segmentation/) |
-| **GAN for Handwritten Digit Recognition** | Minimax Game, AC-GAN, Multi-Class Recognition Head, Class-Conditioned Generation, MNIST | PyTorch, Torchvision, NumPy, Matplotlib | ✅ Completed | [Explore Module](./gan-mnist-digit-recognition/) |
+| **Autoencoder for Semantic Image Segmentation** | Encoder-Decoder Network, Transposed Convolutions, Soft Dice + BCE Loss, mIoU / Dice Evaluation | PyTorch, NumPy, Matplotlib | Completed | [Explore Module](./autoencoder-image-segmentation/) |
+| **GAN for Handwritten Digit Recognition** | Minimax Game, AC-GAN, Multi-Class Recognition Head, Class-Conditioned Generation, MNIST | PyTorch, Torchvision, NumPy, Matplotlib | Completed | [Explore Module](./gan-mnist-digit-recognition/) |
+| **Pix2Pix GAN for Image-to-Image Domain Translation** | Conditional GAN, U-Net Skip Connections, 70x70 PatchGAN, L1 Reconstruction Loss, Sketch-to-Photo | PyTorch, Torchvision, NumPy, Matplotlib | Completed | [Explore Module](./pix2pix-image-to-image-translation/) |
 
 ---
 
@@ -81,10 +82,14 @@ applied-generative-ai-labs/
 │   ├── autoencoder_segmentation.py              # PyTorch Encoder-Decoder segmentation pipeline
 │   ├── segmentation_evaluation_results.json     # Machine-readable mIoU, Dice, and accuracy metrics
 │   └── segmentation_results.png                 # Qualitative visual overlays & learning curves
-└── gan-mnist-digit-recognition/                 # GAN for Handwritten Digit Recognition
-    ├── README.md                                # Minimax formulation, AC-GAN architecture & metrics
-    ├── gan_mnist_recognition.py                 # PyTorch AC-GAN generative & recognition pipeline
-    └── gan_mnist_evaluation_results.json        # Machine-readable test accuracy & loss metrics
+├── gan-mnist-digit-recognition/                 # GAN for Handwritten Digit Recognition
+│   ├── README.md                                # Minimax formulation, AC-GAN architecture & metrics
+│   ├── gan_mnist_recognition.py                 # PyTorch AC-GAN generative & recognition pipeline
+│   └── gan_mnist_evaluation_results.json        # Machine-readable test accuracy & loss metrics
+└── pix2pix-image-to-image-translation/          # Pix2Pix Image-to-Image Domain Translation
+    ├── README.md                                # Comprehensive technical report & PatchGAN math
+    ├── pix2pix_translation.py                   # PyTorch U-Net & PatchGAN translation script
+    └── translation_evaluation_results.json      # Machine-readable test metrics and training history
 ```
 
 ---
