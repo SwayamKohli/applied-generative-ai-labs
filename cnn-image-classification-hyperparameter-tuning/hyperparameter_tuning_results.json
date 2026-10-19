@@ -1,0 +1,416 @@
+{
+  "dataset": "Fashion-MNIST (10 Classes)",
+  "trials": [
+    {
+      "trial_id": 1,
+      "name": "Baseline Adam",
+      "conv_channels": [
+        32,
+        64
+      ],
+      "dense_units": 128,
+      "lr": 0.001,
+      "optimizer": "Adam",
+      "dropout": 0.25,
+      "parameters": 421834,
+      "final_train_loss": 0.2646,
+      "final_train_acc": 90.29,
+      "final_val_loss": 0.2325,
+      "final_val_acc": 91.31,
+      "history": {
+        "train_loss": [
+          0.4799,
+          0.3424,
+          0.3058,
+          0.2823,
+          0.2646
+        ],
+        "train_acc": [
+          82.51,
+          87.66,
+          88.84,
+          89.81,
+          90.29
+        ],
+        "val_loss": [
+          0.3094,
+          0.2765,
+          0.2673,
+          0.2495,
+          0.2325
+        ],
+        "val_acc": [
+          88.44,
+          89.91,
+          90.17,
+          90.76,
+          91.31
+        ]
+      }
+    },
+    {
+      "trial_id": 2,
+      "name": "Low Learning Rate",
+      "conv_channels": [
+        32,
+        64
+      ],
+      "dense_units": 128,
+      "lr": 0.0001,
+      "optimizer": "Adam",
+      "dropout": 0.25,
+      "parameters": 421834,
+      "final_train_loss": 0.2931,
+      "final_train_acc": 89.29,
+      "final_val_loss": 0.2633,
+      "final_val_acc": 90.29,
+      "history": {
+        "train_loss": [
+          0.6014,
+          0.3893,
+          0.3435,
+          0.3151,
+          0.2931
+        ],
+        "train_acc": [
+          79.08,
+          86.16,
+          87.7,
+          88.68,
+          89.29
+        ],
+        "val_loss": [
+          0.3834,
+          0.3213,
+          0.2964,
+          0.283,
+          0.2633
+        ],
+        "val_acc": [
+          86.84,
+          88.38,
+          89.25,
+          89.68,
+          90.29
+        ]
+      }
+    },
+    {
+      "trial_id": 3,
+      "name": "High Regularization",
+      "conv_channels": [
+        32,
+        64
+      ],
+      "dense_units": 128,
+      "lr": 0.001,
+      "optimizer": "Adam",
+      "dropout": 0.5,
+      "parameters": 421834,
+      "final_train_loss": 0.3694,
+      "final_train_acc": 86.73,
+      "final_val_loss": 0.2735,
+      "final_val_acc": 89.86,
+      "history": {
+        "train_loss": [
+          0.6433,
+          0.4677,
+          0.418,
+          0.3846,
+          0.3694
+        ],
+        "train_acc": [
+          76.64,
+          83.13,
+          84.88,
+          86.07,
+          86.73
+        ],
+        "val_loss": [
+          0.3858,
+          0.35,
+          0.3144,
+          0.2867,
+          0.2735
+        ],
+        "val_acc": [
+          85.99,
+          87.71,
+          87.98,
+          89.41,
+          89.86
+        ]
+      }
+    },
+    {
+      "trial_id": 4,
+      "name": "Compact Capacity",
+      "conv_channels": [
+        16,
+        32
+      ],
+      "dense_units": 64,
+      "lr": 0.001,
+      "optimizer": "Adam",
+      "dropout": 0.2,
+      "parameters": 105962,
+      "final_train_loss": 0.2851,
+      "final_train_acc": 89.53,
+      "final_val_loss": 0.2572,
+      "final_val_acc": 90.66,
+      "history": {
+        "train_loss": [
+          0.5244,
+          0.3644,
+          0.328,
+          0.302,
+          0.2851
+        ],
+        "train_acc": [
+          81.25,
+          86.7,
+          88.15,
+          88.95,
+          89.53
+        ],
+        "val_loss": [
+          0.3337,
+          0.301,
+          0.2747,
+          0.272,
+          0.2572
+        ],
+        "val_acc": [
+          87.7,
+          89.01,
+          90.06,
+          89.78,
+          90.66
+        ]
+      }
+    },
+    {
+      "trial_id": 5,
+      "name": "SGD with Momentum",
+      "conv_channels": [
+        32,
+        64
+      ],
+      "dense_units": 128,
+      "lr": 0.01,
+      "optimizer": "SGD_Momentum",
+      "dropout": 0.25,
+      "parameters": 421834,
+      "final_train_loss": 0.2697,
+      "final_train_acc": 89.97,
+      "final_val_loss": 0.238,
+      "final_val_acc": 91.18,
+      "history": {
+        "train_loss": [
+          0.5225,
+          0.3614,
+          0.3222,
+          0.2886,
+          0.2697
+        ],
+        "train_acc": [
+          81.06,
+          86.78,
+          88.16,
+          89.3,
+          89.97
+        ],
+        "val_loss": [
+          0.3366,
+          0.3141,
+          0.2797,
+          0.2568,
+          0.238
+        ],
+        "val_acc": [
+          87.79,
+          88.37,
+          89.81,
+          90.56,
+          91.18
+        ]
+      }
+    }
+  ],
+  "optimal_trial": {
+    "trial_id": 1,
+    "name": "Baseline Adam",
+    "conv_channels": [
+      32,
+      64
+    ],
+    "dense_units": 128,
+    "lr": 0.001,
+    "optimizer": "Adam",
+    "dropout": 0.25,
+    "parameters": 421834,
+    "final_train_loss": 0.2646,
+    "final_train_acc": 90.29,
+    "final_val_loss": 0.2325,
+    "final_val_acc": 91.31,
+    "history": {
+      "train_loss": [
+        0.4799,
+        0.3424,
+        0.3058,
+        0.2823,
+        0.2646
+      ],
+      "train_acc": [
+        82.51,
+        87.66,
+        88.84,
+        89.81,
+        90.29
+      ],
+      "val_loss": [
+        0.3094,
+        0.2765,
+        0.2673,
+        0.2495,
+        0.2325
+      ],
+      "val_acc": [
+        88.44,
+        89.91,
+        90.17,
+        90.76,
+        91.31
+      ]
+    }
+  },
+  "test_evaluation": {
+    "total_test_samples": 10000,
+    "test_accuracy": 0.908,
+    "macro_precision": 0.9083,
+    "macro_recall": 0.908,
+    "macro_f1_score": 0.9079,
+    "confusion_matrix": [
+      [
+        876,
+        0,
+        10,
+        21,
+        4,
+        1,
+        83,
+        0,
+        5,
+        0
+      ],
+      [
+        1,
+        979,
+        0,
+        15,
+        2,
+        0,
+        2,
+        0,
+        1,
+        0
+      ],
+      [
+        26,
+        1,
+        852,
+        6,
+        58,
+        0,
+        57,
+        0,
+        0,
+        0
+      ],
+      [
+        11,
+        3,
+        8,
+        900,
+        41,
+        0,
+        37,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        54,
+        19,
+        869,
+        0,
+        57,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        977,
+        0,
+        19,
+        0,
+        4
+      ],
+      [
+        112,
+        2,
+        57,
+        32,
+        77,
+        0,
+        714,
+        0,
+        6,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        988,
+        0,
+        10
+      ],
+      [
+        2,
+        1,
+        0,
+        3,
+        6,
+        1,
+        4,
+        3,
+        980,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        0,
+        0,
+        7,
+        0,
+        47,
+        0,
+        945
+      ]
+    ]
+  }
+}

@@ -23,6 +23,7 @@ Every project in this repository is built to be:
 | **LLM Fine-Tuning with LoRA on Custom QA Dataset** | Parameter-Efficient Fine-Tuning (PEFT), Instruction Tuning, Tokenization Masking, Model Comparison | PyTorch, Hugging Face Transformers, PEFT, LoRA | ✅ Completed | [Explore Module](./llm-finetuning-lora/) |
 | **ANN Binary Classification with Back-Propagation** | Forward & Backward Propagation, Chain Rule Calculus, Binary Cross-Entropy, Decision Boundaries | Python, NumPy, Scikit-Learn, Matplotlib | ✅ Completed | [Explore Module](./ann-binary-classification-backprop/) |
 | **ANN Multi-Class Classification with Back-Propagation** | Multi-Class Vectorized Backpropagation, Softmax Jacobian, Categorical Cross-Entropy, Adam | Python, NumPy, Scikit-Learn, Matplotlib | ✅ Completed | [Explore Module](./ann-multiclass-classification-backprop/) |
+| **CNN Image Classification with Hyperparameter Tuning** | Deep CNN Architecture, Batch Normalization, Hyperparameter Search, Fashion-MNIST, PyTorch | PyTorch, Torchvision, NumPy, Matplotlib | ✅ Completed | [Explore Module](./cnn-image-classification-hyperparameter-tuning/) |
 
 ---
 
@@ -59,10 +60,14 @@ applied-generative-ai-labs/
 │   ├── README.md                                # Mathematical derivation & evaluation report
 │   ├── ann_binary_classification.py             # Vectorized NumPy MLP from scratch
 │   └── evaluation_metrics.json                  # Machine-readable test evaluation metrics
-└── ann-multiclass-classification-backprop/      # ANN Multi-Class Classification with Backpropagation
-    ├── README.md                                # Mathematical derivation & evaluation report
-    ├── ann_multiclass_classification.py         # Vectorized NumPy Multi-Class MLP from scratch
-    └── evaluation_metrics.json                  # Machine-readable test evaluation metrics
+├── ann-multiclass-classification-backprop/      # ANN Multi-Class Classification with Backpropagation
+│   ├── README.md                                # Mathematical derivation & evaluation report
+│   ├── ann_multiclass_classification.py         # Vectorized NumPy Multi-Class MLP from scratch
+│   └── evaluation_metrics.json                  # Machine-readable test evaluation metrics
+└── cnn-image-classification-hyperparameter-tuning/ # CNN Image Classification with Hyperparameter Tuning
+    ├── README.md                                # Comprehensive technical report & hyperparameter analysis
+    ├── cnn_hyperparameter_tuning.py             # PyTorch CNN architecture & tuning pipeline
+    └── hyperparameter_tuning_results.json       # Machine-readable tuning trials & evaluation metrics
 ```
 
 ---
