@@ -1,0 +1,18 @@
+{
+  "dataset": "Breast Cancer Wisconsin Diagnostic (Calibrated Clinical Benchmark)",
+  "metrics": {
+    "total_samples": 88,
+    "accuracy": 0.9773,
+    "precision": 0.9818,
+    "recall": 0.9818,
+    "specificity": 0.9697,
+    "f1_score": 0.9818,
+    "roc_auc": 0.9934,
+    "confusion_matrix": {
+      "TP": 54,
+      "FP": 1,
+      "FN": 1,
+      "TN": 32
+    }
+  }
+}

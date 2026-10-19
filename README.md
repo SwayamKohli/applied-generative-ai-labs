@@ -21,6 +21,7 @@ Every project in this repository is built to be:
 | **Smart Waste Classification Using Deep Neural Network** | Computer Vision, Custom Dataset Pipeline, Multi-class Classification, DNN Regularization | TensorFlow / Keras, Scikit-Learn, Matplotlib | ✅ Completed | [Explore Module](./smart-waste-classification-dnn/) |
 | **University Student Handbook Mini-RAG Assistant** | Retrieval-Augmented Generation (RAG), Semantic Vector Search, Document Grounding, Anti-Hallucination | Sentence-Transformers, FAISS, Flan-T5, PyPDF | ✅ Completed | [Explore Module](./student-handbook-rag-assistant/) |
 | **LLM Fine-Tuning with LoRA on Custom QA Dataset** | Parameter-Efficient Fine-Tuning (PEFT), Instruction Tuning, Tokenization Masking, Model Comparison | PyTorch, Hugging Face Transformers, PEFT, LoRA | ✅ Completed | [Explore Module](./llm-finetuning-lora/) |
+| **ANN Binary Classification with Back-Propagation** | Forward & Backward Propagation, Chain Rule Calculus, Binary Cross-Entropy, Decision Boundaries | Python, NumPy, Scikit-Learn, Matplotlib | ✅ Completed | [Explore Module](./ann-binary-classification-backprop/) |
 
 ---
 
@@ -40,19 +41,23 @@ applied-generative-ai-labs/
 │   ├── rag_evaluation_results.json              # Machine-readable benchmark audit results
 │   ├── rag_performance_evaluation.svg          # Visual metrics dashboard
 │   └── vector_store/                            # Serialized vector embeddings & metadata
-└── llm-finetuning-lora/                         # LLM Fine-Tuning with LoRA
-    ├── README.md                                # Technical report & side-by-side comparison
-    ├── train_lora_qa.py                         # Self-contained PEFT fine-tuning script
-    ├── custom_qa_dataset.json                   # 25 curated AI engineering QA pairs
-    ├── lora_evaluation_comparison.json          # Colab evaluation side-by-side audit
-    ├── training_loss_curve.svg                  # Step-by-step training loss curve (vector)
-    ├── training_loss_curve.png                  # Training loss trajectory chart
-    ├── lora_qa_adapter_artifacts.zip            # Downloadable adapter weights & artifacts bundle
-    └── lora_qa_adapter/                         # Trained adapter weights (safetensors)
-        ├── adapter_config.json
-        ├── adapter_model.safetensors
-        ├── tokenizer.json
-        └── tokenizer_config.json
+├── llm-finetuning-lora/                         # LLM Fine-Tuning with LoRA
+│   ├── README.md                                # Technical report & side-by-side comparison
+│   ├── train_lora_qa.py                         # Self-contained PEFT fine-tuning script
+│   ├── custom_qa_dataset.json                   # 25 curated AI engineering QA pairs
+│   ├── lora_evaluation_comparison.json          # Colab evaluation side-by-side audit
+│   ├── training_loss_curve.svg                  # Step-by-step training loss curve (vector)
+│   ├── training_loss_curve.png                  # Training loss trajectory chart
+│   ├── lora_qa_adapter_artifacts.zip            # Downloadable adapter weights & artifacts bundle
+│   └── lora_qa_adapter/                         # Trained adapter weights (safetensors)
+│       ├── adapter_config.json
+│       ├── adapter_model.safetensors
+│       ├── tokenizer.json
+│       └── tokenizer_config.json
+└── ann-binary-classification-backprop/          # ANN Binary Classification with Backpropagation
+    ├── README.md                                # Mathematical derivation & evaluation report
+    ├── ann_binary_classification.py             # Vectorized NumPy MLP from scratch
+    └── evaluation_metrics.json                  # Machine-readable test evaluation metrics
 ```
 
 ---
