@@ -1,0 +1,196 @@
+"""Vision Transformer (ViT) Architecture for Image Classification on CIFAR-10
+Architecture: Patch Embedding (P=4) -> Learnable [CLS] & 1D Pos-Embeddings -> Multi-Head Self-Attention -> MLP Head
+Benchmark: CIFAR-10 (10 Classes, 32x32 RGB Images, 64 Patches/Image)
+"""
+import os, sys, json, time, numpy as np
+
+try:
+    import torch, torch.nn as nn, torch.optim as optim
+    from torch.utils.data import DataLoader, Subset
+    import torchvision, torchvision.transforms as transforms; HAS_TORCH = True
+except ImportError:
+    if "google.colab" in sys.modules:
+        import subprocess; subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", "torch", "torchvision", "matplotlib"])
+        import torch, torch.nn as nn, torch.optim as optim; from torch.utils.data import DataLoader, Subset
+        import torchvision, torchvision.transforms as transforms; HAS_TORCH = True
+    else: HAS_TORCH = False
+
+try:
+    import matplotlib.pyplot as plt; HAS_MATPLOTLIB = True
+except ImportError: plt, HAS_MATPLOTLIB = None, False
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__)) if "__file__" in globals() else os.getcwd()
+RESULTS_JSON = os.path.join(BASE_DIR, "vit_classification_results.json")
+PLOT_PNG = os.path.join(BASE_DIR, "vit_classification_results.png")
+CLASSES = ["airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"]
+
+if HAS_TORCH:
+    class TransformerBlock(nn.Module):
+        """Pre-LayerNorm Transformer Encoder Block with Multi-Head Self-Attention and GELU MLP."""
+        def __init__(self, embed_dim=128, num_heads=4, mlp_ratio=2, drop=0.1):
+            super().__init__()
+            self.ln1 = nn.LayerNorm(embed_dim)
+            self.attn = nn.MultiheadAttention(embed_dim, num_heads, dropout=drop, batch_first=True)
+            self.ln2 = nn.LayerNorm(embed_dim)
+            self.mlp = nn.Sequential(
+                nn.Linear(embed_dim, embed_dim * mlp_ratio), nn.GELU(), nn.Dropout(drop),
+                nn.Linear(embed_dim * mlp_ratio, embed_dim), nn.Dropout(drop)
+            )
+        def forward(self, x):
+            norm_x = self.ln1(x)
+            attn_out, _ = self.attn(norm_x, norm_x, norm_x)
+            x = x + attn_out; x = x + self.mlp(self.ln2(x))
+            return x
+
+    class VisionTransformer(nn.Module):
+        """Pure Vision Transformer (ViT) without convolutional backbone for patch-based classification."""
+        def __init__(self, img_sz=32, patch_sz=4, in_ch=3, n_classes=10, embed_dim=128, depth=4, n_heads=4, mlp_r=2, drop=0.1):
+            super().__init__()
+            n_patches = (img_sz // patch_sz) ** 2
+            self.patch_embed = nn.Conv2d(in_ch, embed_dim, kernel_size=patch_sz, stride=patch_sz)
+            self.cls_token = nn.Parameter(torch.zeros(1, 1, embed_dim))
+            self.pos_embed = nn.Parameter(torch.randn(1, n_patches + 1, embed_dim) * 0.02)
+            self.drop = nn.Dropout(drop)
+            self.blocks = nn.ModuleList([TransformerBlock(embed_dim, n_heads, mlp_r, drop) for _ in range(depth)])
+            self.ln_head = nn.LayerNorm(embed_dim); self.head = nn.Linear(embed_dim, n_classes)
+
+        def forward(self, x):
+            b = x.shape[0]
+            x = self.patch_embed(x).flatten(2).transpose(1, 2)  # (B, N, D)
+            cls_tokens = self.cls_token.expand(b, -1, -1)
+            x = torch.cat((cls_tokens, x), dim=1) + self.pos_embed
+            x = self.drop(x)
+            for blk in self.blocks: x = blk(x)
+            return self.head(self.ln_head(x[:, 0]))
+
+def get_dataloaders(batch_size=128, n_train=15000, n_test=3000):
+    """Loads standardized CIFAR-10 splits with normalization and spatial data augmentations."""
+    tr_tf = transforms.Compose([
+        transforms.RandomCrop(32, padding=4), transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(), transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2470, 0.2435, 0.2616))
+    ])
+    te_tf = transforms.Compose([
+        transforms.ToTensor(), transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2470, 0.2435, 0.2616))
+    ])
+    raw_tr = torchvision.datasets.CIFAR10(root="./data", train=True, download=True, transform=tr_tf)
+    raw_te = torchvision.datasets.CIFAR10(root="./data", train=False, download=True, transform=te_tf)
+    tr_ds = Subset(raw_tr, range(min(n_train, len(raw_tr))))
+    te_ds = Subset(raw_te, range(min(n_test, len(raw_te))))
+    return (DataLoader(tr_ds, batch_size=batch_size, shuffle=True, num_workers=2, pin_memory=True),
+            DataLoader(te_ds, batch_size=batch_size, shuffle=False, num_workers=2, pin_memory=True))
+
+def compute_metrics(y_true, y_pred, n_classes=10):
+    """Computes categorical classification metrics and confusion matrix."""
+    cm = np.zeros((n_classes, n_classes), dtype=np.int32)
+    for t, p in zip(y_true, y_pred): cm[t, p] += 1
+    acc = float(np.trace(cm)) / float(np.sum(cm)) * 100.0
+    precisions, recalls = [], []
+    for c in range(n_classes):
+        tp = cm[c, c]; fp = np.sum(cm[:, c]) - tp; fn = np.sum(cm[c, :]) - tp
+        precisions.append(tp / (tp + fp) if (tp + fp) > 0 else 0.0)
+        recalls.append(tp / (tp + fn) if (tp + fn) > 0 else 0.0)
+    p_macro = float(np.mean(precisions)) * 100.0; r_macro = float(np.mean(recalls)) * 100.0
+    f1_macro = (2.0 * p_macro * r_macro) / (p_macro + r_macro) if (p_macro + r_macro) > 0 else 0.0
+    return {"accuracy": round(acc, 2), "precision": round(p_macro, 2), "recall": round(r_macro, 2), "f1_score": round(f1_macro, 2), "cm": cm}
+
+def train_vit(epochs=6, batch_size=128, lr=1e-3, weight_decay=0.05):
+    """Executes end-to-end training and test evaluation of Vision Transformer."""
+    if not HAS_TORCH:
+        print("PyTorch environment required. Please run on Google Colab GPU."); return None, None
+    device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
+    print(f"Execution Device: {device} | Downloading/Loading CIFAR-10 Benchmark...")
+    tr_loader, te_loader = get_dataloaders(batch_size=batch_size)
+
+    model = VisionTransformer(img_sz=32, patch_sz=4, in_ch=3, n_classes=10, embed_dim=128, depth=4, n_heads=4, mlp_r=2, drop=0.1).to(device)
+    n_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    print(f"Vision Transformer Initialized | Parameters: {n_params:,} | Patches: 64 (4x4) | Layers: 4 | Heads: 4")
+    print(f"Dataset Size: {len(tr_loader.dataset):,} Train | {len(te_loader.dataset):,} Test | Batch Size: {batch_size}\n" + "-" * 85)
+
+    criterion = nn.CrossEntropyLoss(label_smoothing=0.05)
+    optimizer = optim.AdamW(model.parameters(), lr=lr, weight_decay=weight_decay)
+    scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
+
+    history = {"train_loss": [], "val_loss": [], "val_acc": []}
+    for ep in range(1, epochs + 1):
+        model.train(); tr_loss = 0.0
+        for x, y in tr_loader:
+            x, y = x.to(device, non_blocking=True), y.to(device, non_blocking=True); optimizer.zero_grad()
+            out = model(x); loss = criterion(out, y); loss.backward(); optimizer.step(); tr_loss += loss.item()
+        scheduler.step(); tr_loss /= len(tr_loader)
+
+        model.eval(); val_loss, correct, total = 0.0, 0, 0
+        with torch.no_grad():
+            for x, y in te_loader:
+                x, y = x.to(device, non_blocking=True), y.to(device, non_blocking=True)
+                out = model(x); val_loss += criterion(out, y).item()
+                correct += (out.argmax(1) == y).sum().item(); total += y.size(0)
+        val_loss /= len(te_loader); val_acc = (correct / total) * 100.0
+        history["train_loss"].append(round(tr_loss, 4)); history["val_loss"].append(round(val_loss, 4)); history["val_acc"].append(round(val_acc, 2))
+        print(f"Epoch {ep:02d}/{epochs:02d} | Train Loss: {tr_loss:.4f} | Val Loss: {val_loss:.4f} | Val Accuracy: {val_acc:.2f}%")
+
+    # Final Test Set Evaluation
+    model.eval(); all_preds, all_targets = [], []
+    with torch.no_grad():
+        for x, y in te_loader:
+            x = x.to(device, non_blocking=True)
+            all_preds.extend(model(x).argmax(1).cpu().numpy()); all_targets.extend(y.numpy())
+    test_metrics = compute_metrics(all_targets, all_preds)
+    return history, test_metrics
+
+def plot_vit_results(history, test_metrics):
+    """Renders dual panel dashboard: Loss/Accuracy dynamics and 10x10 Confusion Matrix."""
+    if not HAS_MATPLOTLIB or plt is None or test_metrics is None: return
+    try:
+        fig = plt.figure(figsize=(15, 7)); gs = fig.add_gridspec(2, 2)
+        ax_loss, ax_acc = fig.add_subplot(gs[0, 0]), fig.add_subplot(gs[0, 1])
+        ax_cm = fig.add_subplot(gs[1, :]); eps = range(1, len(history["train_loss"]) + 1)
+
+        ax_loss.plot(eps, history["train_loss"], "o-", label="Train Loss", color="#2563eb")
+        ax_loss.plot(eps, history["val_loss"], "s--", label="Val Loss", color="#dc2626")
+        ax_loss.set_title("Cross-Entropy Loss Trajectory"); ax_loss.set_xlabel("Epochs"); ax_loss.grid(True, linestyle=":", alpha=0.6); ax_loss.legend()
+
+        ax_acc.plot(eps, history["val_acc"], "^-", label="Validation Accuracy (%)", color="#16a34a")
+        ax_acc.set_title("Accuracy Trajectory (%)"); ax_acc.set_xlabel("Epochs"); ax_acc.grid(True, linestyle=":", alpha=0.6); ax_acc.legend()
+
+        cm = test_metrics["cm"]
+        im = ax_cm.imshow(cm, cmap="Blues", interpolation="nearest")
+        ax_cm.set_title("Vision Transformer CIFAR-10 Confusion Matrix (N = 3,000)")
+        ax_cm.set_xticks(range(10)); ax_cm.set_xticklabels(CLASSES, rotation=35, ha="right", fontsize=9)
+        ax_cm.set_yticks(range(10)); ax_cm.set_yticklabels(CLASSES, fontsize=9)
+        fig.colorbar(im, ax=ax_cm, fraction=0.02, pad=0.02)
+        for i in range(10):
+            for j in range(10):
+                val = cm[i, j]
+                ax_cm.text(j, i, str(val), ha="center", va="center", color="white" if val > np.max(cm)/2 else "black", fontsize=8)
+
+        plt.tight_layout(); plt.savefig(PLOT_PNG, dpi=180)
+        if "google.colab" in sys.modules or "ipykernel" in sys.modules: plt.show()
+        plt.close()
+    except Exception as e: print(f"Plot notification: {e}")
+
+def main():
+    print("-" * 85); print("Vision Transformer (ViT) Architecture for Image Classification on CIFAR-10"); print("-" * 85)
+    print("Patch Resolution: 4x4 (64 Patches/Image) | Embedding Dim: 128 | Encoder Depth: 4 Layers")
+    print("Attention Heads:  4 Multi-Head Attention | Optimizer: AdamW (lr=0.001, wd=0.05)\n" + "-" * 85)
+    history, test_metrics = train_vit(epochs=6, batch_size=128)
+
+    if history is not None:
+        print("\n" + "=" * 85); print("VISION TRANSFORMER EVALUATION ON UNSEEN CIFAR-10 TEST SET (N = 3,000)")
+        print("=" * 85)
+        print(f"Overall Test Accuracy:     {test_metrics['accuracy']:.2f} %")
+        print(f"Macro-Averaged Precision:  {test_metrics['precision']:.2f} %")
+        print(f"Macro-Averaged Recall:     {test_metrics['recall']:.2f} %")
+        print(f"Macro-Averaged F1-Score:   {test_metrics['f1_score']:.2f} %")
+        print(f"Final Training Loss:       {history['train_loss'][-1]:.4f}")
+        print(f"Final Validation Loss:     {history['val_loss'][-1]:.4f}")
+        print("=" * 85)
+
+        plot_vit_results(history, test_metrics)
+        eval_dict = {"task": "Vision Transformer Image Classification on CIFAR-10",
+                     "architecture": "ViT (Patch 4x4, Dim 128, Depth 4, Heads 4)",
+                     "test_metrics": {"accuracy": test_metrics["accuracy"], "precision": test_metrics["precision"],
+                                      "recall": test_metrics["recall"], "f1_score": test_metrics["f1_score"]},
+                     "history": history, "confusion_matrix": test_metrics["cm"].tolist()}
+        with open(RESULTS_JSON, "w", encoding="utf-8") as f: json.dump(eval_dict, f, indent=2)
+
+if __name__ == "__main__": main()

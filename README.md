@@ -29,6 +29,7 @@ Every project in this repository is built to be:
 | **GAN for Handwritten Digit Recognition** | Minimax Game, AC-GAN, Multi-Class Recognition Head, Class-Conditioned Generation, MNIST | PyTorch, Torchvision, NumPy, Matplotlib | Completed | [Explore Module](./gan-mnist-digit-recognition/) |
 | **Pix2Pix GAN for Image-to-Image Domain Translation** | Conditional GAN, U-Net Skip Connections, 70x70 PatchGAN, L1 Reconstruction Loss, Sketch-to-Photo | PyTorch, Torchvision, NumPy, Matplotlib | Completed | [Explore Module](./pix2pix-image-to-image-translation/) |
 | **RNN for Music Composition Generation** | Stacked 2-Layer LSTM, Embedding Layer, Cross-Entropy & Perplexity, Temperature Sampling, MIDI Synthesis | PyTorch, NumPy, Matplotlib | Completed | [Explore Module](./rnn-music-generation/) |
+| **Vision Transformer (ViT) for Image Classification** | Patch Embedding (P=4), [CLS] Token, Multi-Head Self-Attention, GELU MLP, CIFAR-10 | PyTorch, Torchvision, NumPy, Matplotlib | Completed | [Explore Module](./vision-transformer-image-classification/) |
 
 ---
 
@@ -91,10 +92,14 @@ applied-generative-ai-labs/
 │   ├── README.md                                # Comprehensive technical report & PatchGAN math
 │   ├── pix2pix_translation.py                   # PyTorch U-Net & PatchGAN translation script
 │   └── translation_evaluation_results.json      # Machine-readable test metrics and training history
-└── rnn-music-generation/                        # Recurrent Neural Network for Music Generation
-    ├── README.md                                # Mathematical formulation, LSTM gates & metrics
-    ├── music_generation_rnn.py                  # PyTorch Stacked LSTM & MIDI synthesis script
-    └── music_generation_results.json           # Recorded perplexity, loss, and generated compositions
+├── rnn-music-generation/                        # Recurrent Neural Network for Music Generation
+│   ├── README.md                                # Mathematical formulation, LSTM gates & metrics
+│   ├── music_generation_rnn.py                  # PyTorch Stacked LSTM & MIDI synthesis script
+│   └── music_generation_results.json           # Recorded perplexity, loss, and generated compositions
+└── vision-transformer-image-classification/     # Vision Transformer for Image Classification
+    ├── README.md                                # Technical formulation & self-attention math
+    ├── vision_transformer_classification.py     # PyTorch ViT architecture & pipeline script
+    └── vit_classification_results.json         # Machine-readable evaluation metrics & history
 ```
 
 ---
