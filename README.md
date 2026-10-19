@@ -26,6 +26,7 @@ Every project in this repository is built to be:
 | **CNN Image Classification with Hyperparameter Tuning** | Deep CNN Architecture, Batch Normalization, Hyperparameter Search, Fashion-MNIST, PyTorch | PyTorch, Torchvision, NumPy, Matplotlib | ✅ Completed | [Explore Module](./cnn-image-classification-hyperparameter-tuning/) |
 | **Pre-trained CNN Architectures Benchmark** | Transfer Learning, AlexNet, VGG-16, InceptionNet, ResNet-50, Inference Latency, Top-1/Top-5 | PyTorch, Torchvision, NumPy, Matplotlib | ✅ Completed | [Explore Module](./pretrained-cnn-models-comparison/) |
 | **Autoencoder for Semantic Image Segmentation** | Encoder-Decoder Network, Transposed Convolutions, Soft Dice + BCE Loss, mIoU / Dice Evaluation | PyTorch, NumPy, Matplotlib | ✅ Completed | [Explore Module](./autoencoder-image-segmentation/) |
+| **GAN for Handwritten Digit Recognition** | Minimax Game, AC-GAN, Multi-Class Recognition Head, Class-Conditioned Generation, MNIST | PyTorch, Torchvision, NumPy, Matplotlib | ✅ Completed | [Explore Module](./gan-mnist-digit-recognition/) |
 
 ---
 
@@ -75,10 +76,15 @@ applied-generative-ai-labs/
 │   ├── README.md                                # Comprehensive comparative report & trade-off analysis
 │   ├── pretrained_cnn_comparison.py             # PyTorch benchmark script (AlexNet, VGG, Inception, ResNet)
 │   └── pretrained_models_comparison.json        # Machine-readable architectural benchmark metrics
-└── autoencoder-image-segmentation/              # Autoencoder for Semantic Image Segmentation
-    ├── README.md                                # Architectural report, deconvolution math & metrics
-    ├── autoencoder_segmentation.py              # PyTorch Encoder-Decoder segmentation pipeline
-    └── segmentation_evaluation_results.json     # Machine-readable mIoU, Dice, and accuracy metrics
+├── autoencoder-image-segmentation/              # Autoencoder for Semantic Image Segmentation
+│   ├── README.md                                # Architectural report, deconvolution math & metrics
+│   ├── autoencoder_segmentation.py              # PyTorch Encoder-Decoder segmentation pipeline
+│   ├── segmentation_evaluation_results.json     # Machine-readable mIoU, Dice, and accuracy metrics
+│   └── segmentation_results.png                 # Qualitative visual overlays & learning curves
+└── gan-mnist-digit-recognition/                 # GAN for Handwritten Digit Recognition
+    ├── README.md                                # Minimax formulation, AC-GAN architecture & metrics
+    ├── gan_mnist_recognition.py                 # PyTorch AC-GAN generative & recognition pipeline
+    └── gan_mnist_evaluation_results.json        # Machine-readable test accuracy & loss metrics
 ```
 
 ---
