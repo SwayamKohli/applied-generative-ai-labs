@@ -24,6 +24,7 @@ Every project in this repository is built to be:
 | **ANN Binary Classification with Back-Propagation** | Forward & Backward Propagation, Chain Rule Calculus, Binary Cross-Entropy, Decision Boundaries | Python, NumPy, Scikit-Learn, Matplotlib | ✅ Completed | [Explore Module](./ann-binary-classification-backprop/) |
 | **ANN Multi-Class Classification with Back-Propagation** | Multi-Class Vectorized Backpropagation, Softmax Jacobian, Categorical Cross-Entropy, Adam | Python, NumPy, Scikit-Learn, Matplotlib | ✅ Completed | [Explore Module](./ann-multiclass-classification-backprop/) |
 | **CNN Image Classification with Hyperparameter Tuning** | Deep CNN Architecture, Batch Normalization, Hyperparameter Search, Fashion-MNIST, PyTorch | PyTorch, Torchvision, NumPy, Matplotlib | ✅ Completed | [Explore Module](./cnn-image-classification-hyperparameter-tuning/) |
+| **Pre-trained CNN Architectures Benchmark** | Transfer Learning, AlexNet, VGG-16, InceptionNet, ResNet-50, Inference Latency, Top-1/Top-5 | PyTorch, Torchvision, NumPy, Matplotlib | ✅ Completed | [Explore Module](./pretrained-cnn-models-comparison/) |
 
 ---
 
@@ -64,10 +65,15 @@ applied-generative-ai-labs/
 │   ├── README.md                                # Mathematical derivation & evaluation report
 │   ├── ann_multiclass_classification.py         # Vectorized NumPy Multi-Class MLP from scratch
 │   └── evaluation_metrics.json                  # Machine-readable test evaluation metrics
-└── cnn-image-classification-hyperparameter-tuning/ # CNN Image Classification with Hyperparameter Tuning
-    ├── README.md                                # Comprehensive technical report & hyperparameter analysis
-    ├── cnn_hyperparameter_tuning.py             # PyTorch CNN architecture & tuning pipeline
-    └── hyperparameter_tuning_results.json       # Machine-readable tuning trials & evaluation metrics
+├── cnn-image-classification-hyperparameter-tuning/ # CNN Image Classification with Hyperparameter Tuning
+│   ├── README.md                                # Comprehensive technical report & hyperparameter analysis
+│   ├── cnn_hyperparameter_tuning.py             # PyTorch CNN architecture & tuning pipeline
+│   ├── hyperparameter_tuning_results.json       # Machine-readable tuning trials & evaluation metrics
+│   └── tuning_comparison.png                    # Empirical validation curves & confusion matrix
+└── pretrained-cnn-models-comparison/            # Pre-trained CNN Models Comparison
+    ├── README.md                                # Comprehensive comparative report & trade-off analysis
+    ├── pretrained_cnn_comparison.py             # PyTorch benchmark script (AlexNet, VGG, Inception, ResNet)
+    └── pretrained_models_comparison.json        # Machine-readable architectural benchmark metrics
 ```
 
 ---

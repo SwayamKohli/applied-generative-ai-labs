@@ -1,0 +1,54 @@
+{
+  "benchmark_task": "ImageNet-1k Pre-trained CNN Comparison",
+  "execution_device": "cuda (Tesla T4 GPU)",
+  "models": [
+    {
+      "model": "AlexNet (2012)",
+      "year": 2012,
+      "depth": 8,
+      "params_m": 61.1,
+      "size_mb": 233.08,
+      "latency_ms": 1.39,
+      "throughput_fps": 720.1,
+      "top1_acc": 56.52,
+      "top5_acc": 79.07,
+      "key_innovation": "First deep GPU CNN, ReLU, Dropout"
+    },
+    {
+      "model": "VGG-16 (2014)",
+      "year": 2014,
+      "depth": 16,
+      "params_m": 138.36,
+      "size_mb": 527.79,
+      "latency_ms": 6.48,
+      "throughput_fps": 154.4,
+      "top1_acc": 71.59,
+      "top5_acc": 90.38,
+      "key_innovation": "Uniform 3x3 filter factorization, deep hierarchy"
+    },
+    {
+      "model": "InceptionNet (2015)",
+      "year": 2015,
+      "depth": 22,
+      "params_m": 6.62,
+      "size_mb": 25.27,
+      "latency_ms": 1.52,
+      "throughput_fps": 657.9,
+      "top1_acc": 69.78,
+      "top5_acc": 89.53,
+      "key_innovation": "Multi-scale Inception modules, 1x1 bottlenecks"
+    },
+    {
+      "model": "ResNet-50 (2015)",
+      "year": 2015,
+      "depth": 50,
+      "params_m": 25.56,
+      "size_mb": 97.49,
+      "latency_ms": 3.71,
+      "throughput_fps": 269.4,
+      "top1_acc": 76.13,
+      "top5_acc": 92.86,
+      "key_innovation": "Identity shortcut residual learning, bottleneck blocks"
+    }
+  ]
+}
