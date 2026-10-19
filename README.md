@@ -25,6 +25,7 @@ Every project in this repository is built to be:
 | **ANN Multi-Class Classification with Back-Propagation** | Multi-Class Vectorized Backpropagation, Softmax Jacobian, Categorical Cross-Entropy, Adam | Python, NumPy, Scikit-Learn, Matplotlib | ✅ Completed | [Explore Module](./ann-multiclass-classification-backprop/) |
 | **CNN Image Classification with Hyperparameter Tuning** | Deep CNN Architecture, Batch Normalization, Hyperparameter Search, Fashion-MNIST, PyTorch | PyTorch, Torchvision, NumPy, Matplotlib | ✅ Completed | [Explore Module](./cnn-image-classification-hyperparameter-tuning/) |
 | **Pre-trained CNN Architectures Benchmark** | Transfer Learning, AlexNet, VGG-16, InceptionNet, ResNet-50, Inference Latency, Top-1/Top-5 | PyTorch, Torchvision, NumPy, Matplotlib | ✅ Completed | [Explore Module](./pretrained-cnn-models-comparison/) |
+| **Autoencoder for Semantic Image Segmentation** | Encoder-Decoder Network, Transposed Convolutions, Soft Dice + BCE Loss, mIoU / Dice Evaluation | PyTorch, NumPy, Matplotlib | ✅ Completed | [Explore Module](./autoencoder-image-segmentation/) |
 
 ---
 
@@ -70,10 +71,14 @@ applied-generative-ai-labs/
 │   ├── cnn_hyperparameter_tuning.py             # PyTorch CNN architecture & tuning pipeline
 │   ├── hyperparameter_tuning_results.json       # Machine-readable tuning trials & evaluation metrics
 │   └── tuning_comparison.png                    # Empirical validation curves & confusion matrix
-└── pretrained-cnn-models-comparison/            # Pre-trained CNN Models Comparison
-    ├── README.md                                # Comprehensive comparative report & trade-off analysis
-    ├── pretrained_cnn_comparison.py             # PyTorch benchmark script (AlexNet, VGG, Inception, ResNet)
-    └── pretrained_models_comparison.json        # Machine-readable architectural benchmark metrics
+├── pretrained-cnn-models-comparison/            # Pre-trained CNN Models Comparison
+│   ├── README.md                                # Comprehensive comparative report & trade-off analysis
+│   ├── pretrained_cnn_comparison.py             # PyTorch benchmark script (AlexNet, VGG, Inception, ResNet)
+│   └── pretrained_models_comparison.json        # Machine-readable architectural benchmark metrics
+└── autoencoder-image-segmentation/              # Autoencoder for Semantic Image Segmentation
+    ├── README.md                                # Architectural report, deconvolution math & metrics
+    ├── autoencoder_segmentation.py              # PyTorch Encoder-Decoder segmentation pipeline
+    └── segmentation_evaluation_results.json     # Machine-readable mIoU, Dice, and accuracy metrics
 ```
 
 ---
