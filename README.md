@@ -22,6 +22,7 @@ Every project in this repository is built to be:
 | **University Student Handbook Mini-RAG Assistant** | Retrieval-Augmented Generation (RAG), Semantic Vector Search, Document Grounding, Anti-Hallucination | Sentence-Transformers, FAISS, Flan-T5, PyPDF | ✅ Completed | [Explore Module](./student-handbook-rag-assistant/) |
 | **LLM Fine-Tuning with LoRA on Custom QA Dataset** | Parameter-Efficient Fine-Tuning (PEFT), Instruction Tuning, Tokenization Masking, Model Comparison | PyTorch, Hugging Face Transformers, PEFT, LoRA | ✅ Completed | [Explore Module](./llm-finetuning-lora/) |
 | **ANN Binary Classification with Back-Propagation** | Forward & Backward Propagation, Chain Rule Calculus, Binary Cross-Entropy, Decision Boundaries | Python, NumPy, Scikit-Learn, Matplotlib | ✅ Completed | [Explore Module](./ann-binary-classification-backprop/) |
+| **ANN Multi-Class Classification with Back-Propagation** | Multi-Class Vectorized Backpropagation, Softmax Jacobian, Categorical Cross-Entropy, Adam | Python, NumPy, Scikit-Learn, Matplotlib | ✅ Completed | [Explore Module](./ann-multiclass-classification-backprop/) |
 
 ---
 
@@ -54,9 +55,13 @@ applied-generative-ai-labs/
 │       ├── adapter_model.safetensors
 │       ├── tokenizer.json
 │       └── tokenizer_config.json
-└── ann-binary-classification-backprop/          # ANN Binary Classification with Backpropagation
+├── ann-binary-classification-backprop/          # ANN Binary Classification with Backpropagation
+│   ├── README.md                                # Mathematical derivation & evaluation report
+│   ├── ann_binary_classification.py             # Vectorized NumPy MLP from scratch
+│   └── evaluation_metrics.json                  # Machine-readable test evaluation metrics
+└── ann-multiclass-classification-backprop/      # ANN Multi-Class Classification with Backpropagation
     ├── README.md                                # Mathematical derivation & evaluation report
-    ├── ann_binary_classification.py             # Vectorized NumPy MLP from scratch
+    ├── ann_multiclass_classification.py         # Vectorized NumPy Multi-Class MLP from scratch
     └── evaluation_metrics.json                  # Machine-readable test evaluation metrics
 ```
 
