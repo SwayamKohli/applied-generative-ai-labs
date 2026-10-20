@@ -1,0 +1,50 @@
+{
+  "task": "Convolutional Vision Transformer (CvT) Image Classification on CIFAR-10",
+  "architecture": "CvT (Conv Tokenizer 32->8, Dim 128, Depth 4, Heads 4, ConvFFN)",
+  "specifications": {
+    "tokenizer": "2-Stage Overlapping Conv2d (3x3, s=2)",
+    "token_grid": "8x8 (64 Tokens)",
+    "embed_dim": 128,
+    "depth": 4,
+    "num_heads": 4,
+    "ffn_type": "Depthwise Convolutional FFN (ConvFFN)",
+    "pooling": "Global Average Pooling (GAP)",
+    "parameters": 618570,
+    "optimizer": "AdamW (lr=0.001, weight_decay=0.05)",
+    "scheduler": "CosineAnnealingLR"
+  },
+  "dataset_partition": {
+    "benchmark": "CIFAR-10 (10 Classes, 32x32 RGB)",
+    "train_samples": 15000,
+    "test_samples": 3000,
+    "batch_size": 128
+  },
+  "test_metrics": {
+    "accuracy_pct": 65.10,
+    "macro_precision_pct": 65.03,
+    "macro_recall_pct": 65.10,
+    "macro_f1_score_pct": 65.06,
+    "final_train_loss": 1.0939,
+    "final_val_loss": 1.1420
+  },
+  "epoch_training_history": [
+    {"epoch": 1, "train_loss": 1.8432, "val_loss": 1.6168, "val_acc": 44.37},
+    {"epoch": 2, "train_loss": 1.5730, "val_loss": 1.5107, "val_acc": 50.27},
+    {"epoch": 3, "train_loss": 1.3921, "val_loss": 1.3755, "val_acc": 54.97},
+    {"epoch": 4, "train_loss": 1.2629, "val_loss": 1.3335, "val_acc": 56.93},
+    {"epoch": 5, "train_loss": 1.1683, "val_loss": 1.2518, "val_acc": 62.07},
+    {"epoch": 6, "train_loss": 1.0939, "val_loss": 1.1420, "val_acc": 65.10}
+  ],
+  "confusion_matrix": [
+    [215, 12, 12, 4, 3, 6, 8, 2, 30, 7],
+    [5, 237, 2, 2, 0, 0, 1, 1, 12, 27],
+    [20, 6, 153, 29, 37, 18, 37, 8, 6, 4],
+    [10, 3, 31, 131, 10, 63, 27, 5, 2, 13],
+    [8, 4, 21, 16, 172, 18, 32, 20, 5, 3],
+    [4, 4, 16, 68, 17, 155, 6, 11, 5, 4],
+    [1, 1, 23, 20, 19, 6, 233, 0, 0, 4],
+    [10, 4, 9, 17, 28, 19, 3, 191, 1, 4],
+    [24, 13, 3, 5, 3, 1, 3, 0, 257, 7],
+    [10, 48, 3, 5, 2, 0, 3, 3, 20, 209]
+  ]
+}

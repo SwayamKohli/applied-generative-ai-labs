@@ -64,7 +64,12 @@ if HAS_TORCH:
             return self.head(self.ln_head(x[:, 0]))
 
 def get_dataloaders(batch_size=128, n_train=15000, n_test=3000):
-    """Loads standardized CIFAR-10 splits with normalization and spatial data augmentations."""
+    """Loads standardized CIFAR-10 splits with fast mirror and spatial augmentations."""
+    tar_p = os.path.join("./data", "cifar-10-python.tar.gz")
+    if os.path.exists(tar_p) and os.path.getsize(tar_p) < 170000000 and not os.path.exists("./data/cifar-10-batches-py"):
+        try: os.remove(tar_p)
+        except OSError: pass
+    torchvision.datasets.cifar.CIFAR10.url = "https://data.brainchip.com/dataset-mirror/cifar10/cifar-10-python.tar.gz"
     tr_tf = transforms.Compose([
         transforms.RandomCrop(32, padding=4), transforms.RandomHorizontalFlip(),
         transforms.ToTensor(), transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2470, 0.2435, 0.2616))
