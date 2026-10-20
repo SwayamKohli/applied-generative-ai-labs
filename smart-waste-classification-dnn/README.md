@@ -170,7 +170,7 @@ Training curves demonstrate that validation loss decreases smoothly alongside tr
 
 ## 7. Execution Guide (Google Colab)
 
-The implementation script [`waste_classification_dnn.py`](waste_classification_dnn.py) is completely self-contained and free-tier compatible.
+The implementation script [`waste_classification_dnn.py`](waste_classification_dnn.py) is self-contained and runs on standard CPU or GPU environments.
 
 ### Running with Cached Real Waste Photos
 1. Open [Google Colab](https://colab.research.google.com/).

@@ -37,7 +37,7 @@ import numpy as np
 def setup_environment():
     """Installs required packages only when executed within Google Colab."""
     if "google.colab" in sys.modules:
-        print("📦 Google Colab environment detected. Installing required open-source packages...")
+        print(" Google Colab environment detected. Installing required open-source packages...")
         pkgs = [
             "transformers>=4.40.0",
             "peft>=0.10.0",
@@ -51,7 +51,7 @@ def setup_environment():
         os.system(cmd)
         # Prevent Colab torchao version mismatch bug with PEFT
         os.system(f"{sys.executable} -m pip uninstall -y -q torchao")
-        print("✅ Colab packages installed successfully!\n")
+        print(" Colab packages installed successfully!\n")
 
 setup_environment()
 
@@ -86,7 +86,7 @@ GRAD_ACCUM_STEPS = 2
 EPOCHS = 4
 
 print("=" * 80)
-print("🚀 LLM FINE-TUNING PIPELINE USING LoRA (LOW-RANK ADAPTATION)")
+print(" LLM FINE-TUNING PIPELINE USING LoRA (LOW-RANK ADAPTATION)")
 print("=" * 80)
 print(f"Base Model:       {BASE_MODEL_NAME}")
 print(f"LoRA Rank (r):    {LORA_R} | Alpha: {LORA_ALPHA} (Scaling factor: {LORA_ALPHA / LORA_R:.1f}x)")
@@ -100,7 +100,7 @@ print("=" * 80 + "\n")
 def load_custom_dataset(filepath=DATASET_PATH):
     """Loads custom Question-Answer pairs from JSON file; auto-generates if not found."""
     if not os.path.exists(filepath):
-        print(f"📝 Dataset '{filepath}' not found. Generating curated AI Engineering QA dataset...")
+        print(f" Dataset '{filepath}' not found. Generating curated AI Engineering QA dataset...")
         default_data = [
             {"id": 1, "category": "PEFT", "question": "What is LoRA (Low-Rank Adaptation) and how does it reduce memory consumption during LLM fine-tuning?", "answer": "LoRA freezes the pre-trained model weights W_0 and injects trainable rank-decomposition matrices A and B into transformer attention layers, such that W = W_0 + (alpha / r) * B * A. For a weight matrix of dimension d x k, full fine-tuning requires updating d * k parameters, whereas LoRA only updates r * (d + k) parameters where rank r << min(d, k). This reduces trainable parameters by 99% and slashes optimizer memory state requirements by up to 75%."},
             {"id": 2, "category": "PEFT", "question": "What is the relationship between LoRA rank (r) and scaling factor (alpha)?", "answer": "In LoRA, rank (r) controls the low-rank bottleneck dimension of the adapter matrices, while alpha acts as a constant scaling factor such that the adapted update is scaled by (alpha / r). When experimenting with different ranks, setting alpha = 2 * r maintains a consistent learning rate scale. A higher rank (e.g., r = 16 or 32) captures more task-specific complexity, whereas lower rank (r = 4 or 8) minimizes memory footprint."},
@@ -130,11 +130,11 @@ def load_custom_dataset(filepath=DATASET_PATH):
         ]
         with open(filepath, "w", encoding="utf-8") as f:
             json.dump(default_data, f, indent=2)
-        print(f"✅ Generated '{filepath}' with {len(default_data)} QA pairs.")
+        print(f" Generated '{filepath}' with {len(default_data)} QA pairs.")
 
     with open(filepath, "r", encoding="utf-8") as f:
         data = json.load(f)
-    print(f"📂 Loaded custom dataset: {len(data)} high-quality QA pairs from '{filepath}'.")
+    print(f" Loaded custom dataset: {len(data)} high-quality QA pairs from '{filepath}'.")
     return data
 
 qa_dataset = load_custom_dataset()
@@ -214,13 +214,13 @@ def run_finetuning_and_comparison():
     from datasets import Dataset
 
     # A. Load Tokenizer
-    print("⏳ Loading tokenizer...")
+    print(" Loading tokenizer...")
     tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL_NAME, use_fast=True)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
     # B. Load Base Model for Baseline Inference
-    print(f"⏳ Loading pre-trained base model '{BASE_MODEL_NAME}'...")
+    print(f" Loading pre-trained base model '{BASE_MODEL_NAME}'...")
     torch_dtype = torch.float16 if torch.cuda.is_available() else torch.float32
     device_map = "auto" if torch.cuda.is_available() else None
 
@@ -233,11 +233,11 @@ def run_finetuning_and_comparison():
     if hasattr(base_model, "generation_config") and base_model.generation_config is not None:
         base_model.generation_config.max_length = None
     base_model.eval()
-    print("✅ Pre-trained base model loaded successfully.\n")
+    print(" Pre-trained base model loaded successfully.\n")
 
     # C. Generate Baseline Responses BEFORE Fine-Tuning
     print("=" * 80)
-    print("🔍 STEP 1: GENERATING BASELINE RESPONSES (PRE-TRAINED BASE MODEL)")
+    print(" STEP 1: GENERATING BASELINE RESPONSES (PRE-TRAINED BASE MODEL)")
     print("=" * 80)
     baseline_responses = {}
 
@@ -263,12 +263,12 @@ def run_finetuning_and_comparison():
         gen_tokens = outputs[0][inputs["input_ids"].shape[1]:]
         resp = tokenizer.decode(gen_tokens, skip_special_tokens=True).strip()
         baseline_responses[q_id] = resp
-        print(f"👉 Q{q_id}: \"{q_text}\"")
+        print(f" Q{q_id}: \"{q_text}\"")
         print(f"   [Original Base Model Output]:\n   {resp[:200]}...\n")
 
     # D. Prepare Tokenized Training Dataset with Prompt Masking
     print("=" * 80)
-    print("⚙️ STEP 2: TOKENIZATION & PROMPT LABEL MASKING (-100)")
+    print("️ STEP 2: TOKENIZATION & PROMPT LABEL MASKING (-100)")
     print("=" * 80)
 
     tokenized_samples = []
@@ -306,11 +306,11 @@ def run_finetuning_and_comparison():
         })
 
     train_dataset = Dataset.from_list(tokenized_samples)
-    print(f"✅ Prepared {len(train_dataset)} tokenized examples with strict label masking.\n")
+    print(f" Prepared {len(train_dataset)} tokenized examples with strict label masking.\n")
 
     # E. Configure LoRA (Low-Rank Adaptation)
     print("=" * 80)
-    print("🧩 STEP 3: INJECTING LoRA ADAPTERS INTO ATTENTION PROJECTIONS")
+    print(" STEP 3: INJECTING LoRA ADAPTERS INTO ATTENTION PROJECTIONS")
     print("=" * 80)
 
     lora_config = LoraConfig(
@@ -367,22 +367,22 @@ def run_finetuning_and_comparison():
 
     # H. Execute Fine-Tuning
     print("=" * 80)
-    print("🔥 STEP 4: EXECUTING LoRA FINE-TUNING ON CUSTOM QA DATASET")
+    print("[Trainable] STEP 4: EXECUTING LoRA FINE-TUNING ON CUSTOM QA DATASET")
     print("=" * 80)
     start_train_time = time.time()
     train_result = trainer.train()
     total_train_time = time.time() - start_train_time
-    print(f"\n🎉 Training Complete in {total_train_time:.1f} seconds! Final Loss: {train_result.training_loss:.4f}\n")
+    print(f"\n Training Complete in {total_train_time:.1f} seconds! Final Loss: {train_result.training_loss:.4f}\n")
 
     # I. Save LoRA Adapter Weights to Disk
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     lora_model.save_pretrained(OUTPUT_DIR)
     tokenizer.save_pretrained(OUTPUT_DIR)
-    print(f"💾 Saved fine-tuned LoRA adapter weights to: '{OUTPUT_DIR}/'")
+    print(f" Saved fine-tuned LoRA adapter weights to: '{OUTPUT_DIR}/'")
 
     # J. Evaluate Fine-Tuned Model on the Unseen Test Questions
     print("=" * 80)
-    print("📊 STEP 5: EVALUATING FINE-TUNED MODEL & SIDE-BY-SIDE COMPARISON")
+    print(" STEP 5: EVALUATING FINE-TUNED MODEL & SIDE-BY-SIDE COMPARISON")
     print("=" * 80)
     lora_model.eval()
 
@@ -414,11 +414,11 @@ def run_finetuning_and_comparison():
 
         print(f"\n{'=' * 80}")
         print(f"TEST QUESTION {q_id}: [{topic}]")
-        print(f"👉 \"{q_text}\"")
+        print(f" \"{q_text}\"")
         print(f"{'=' * 80}")
-        print(f"🔴 ORIGINAL BASE MODEL (Before LoRA):")
+        print(f"[Frozen] ORIGINAL BASE MODEL (Before LoRA):")
         print(f"   {orig_resp}")
-        print(f"\n🟢 FINE-TUNED MODEL (With LoRA):")
+        print(f"\n[Trainable] FINE-TUNED MODEL (With LoRA):")
         print(f"   {finetuned_resp}")
         print(f"{'=' * 80}")
 
@@ -433,7 +433,7 @@ def run_finetuning_and_comparison():
     # Save Comparison JSON
     with open(COMPARISON_JSON_PATH, "w", encoding="utf-8") as f:
         json.dump(comparison_results, f, indent=2)
-    print(f"\n📄 Saved side-by-side comparison results to '{COMPARISON_JSON_PATH}'.")
+    print(f"\n Saved side-by-side comparison results to '{COMPARISON_JSON_PATH}'.")
 
     # K. Plot and Save Training Loss Trajectory Curve
     plot_loss_trajectory(loss_tracker.steps, loss_tracker.step_losses)
@@ -481,7 +481,7 @@ def generate_svg_loss_curve(steps, losses, svg_path=None):
 </svg>'''
     with open(svg_path, "w", encoding="utf-8") as f:
         f.write(svg)
-    print(f"📈 Saved standalone SVG loss curve to: '{svg_path}'.")
+    print(f" Saved standalone SVG loss curve to: '{svg_path}'.")
 
 def plot_loss_trajectory(steps, losses):
     """Plots and saves the training loss decay curve."""
@@ -501,7 +501,7 @@ def plot_loss_trajectory(steps, losses):
             plt.legend(fontsize=11)
             plt.tight_layout()
             plt.savefig(LOSS_PLOT_PATH, dpi=180)
-            print(f"📈 Saved training loss curve to: '{LOSS_PLOT_PATH}'.")
+            print(f" Saved training loss curve to: '{LOSS_PLOT_PATH}'.")
             # Render inline in Colab / Jupyter cell output
             if "google.colab" in sys.modules or "ipykernel" in sys.modules:
                 plt.show()
@@ -533,7 +533,7 @@ def package_artifacts():
                     arc_path = os.path.relpath(file_path, BASE_DIR)
                     zipf.write(file_path, arcname=arc_path)
 
-    print(f"📦 Bundled LoRA artifacts into: '{ZIP_ARTIFACT_PATH}' ({os.path.getsize(ZIP_ARTIFACT_PATH):,} bytes).")
+    print(f" Bundled LoRA artifacts into: '{ZIP_ARTIFACT_PATH}' ({os.path.getsize(ZIP_ARTIFACT_PATH):,} bytes).")
 
     # Colab one-click download trigger
     if "google.colab" in sys.modules:
@@ -559,4 +559,4 @@ if __name__ == "__main__":
         print("   - Generating verification loss trajectory curve...")
         plot_loss_trajectory([], [])
         package_artifacts()
-        print("\n✅ Verification complete! Ready for Google Colab execution.")
+        print("\n Verification complete! Ready for Google Colab execution.")

@@ -88,7 +88,7 @@ Student Question → Retrieved Context → Generated Answer → Source/Page Numb
 * **↓ Source / Page Number:**
   > **Student Handbook, Page 1 (Chapter 1, Section 1.1 & 1.2)**
 * **↓ Factual PDF Verification:**
-  > **✅ SUPPORTED BY PDF** (Matches exact 75% attendance mandate and 10% medical condonation down to 65%).
+  > **[SUPPORTED BY PDF]** (Matches exact 75% attendance mandate and 10% medical condonation down to 65%).
 
 ---
 
@@ -103,7 +103,7 @@ Student Question → Retrieved Context → Generated Answer → Source/Page Numb
 * **↓ Source / Page Number:**
   > **Student Handbook, Page 4 (Chapter 4, Section 4.1 & 4.2)**
 * **↓ Factual PDF Verification:**
-  > **✅ SUPPORTED BY PDF** (Matches 10 days/semester limit for paper presentations, hackathons, and sports).
+  > **[SUPPORTED BY PDF]** (Matches 10 days/semester limit for paper presentations, hackathons, and sports).
 
 ---
 
@@ -118,7 +118,7 @@ Student Question → Retrieved Context → Generated Answer → Source/Page Numb
 * **↓ Source / Page Number:**
   > **Student Handbook, Page 2 (Chapter 2, Section 2.2 & 2.3)**
 * **↓ Factual PDF Verification:**
-  > **✅ SUPPORTED BY PDF** (Matches 3-tier penalty structure: Category I = course cancellation, Category II = semester cancellation & F grades, Category III = 1–2 year expulsion).
+  > **[SUPPORTED BY PDF]** (Matches 3-tier penalty structure: Category I = course cancellation, Category II = semester cancellation & F grades, Category III = 1–2 year expulsion).
 
 ---
 
@@ -133,7 +133,7 @@ Student Question → Retrieved Context → Generated Answer → Source/Page Numb
 * **↓ Source / Page Number:**
   > **Student Handbook, Page 5 (Chapter 5, Section 5.1)**
 * **↓ Factual PDF Verification:**
-  > **✅ SUPPORTED BY PDF** (Matches weekday 8 AM–11 PM, weekend 9 AM–5 PM, holiday reading section, and 24h exam schedule).
+  > **[SUPPORTED BY PDF]** (Matches weekday 8 AM–11 PM, weekend 9 AM–5 PM, holiday reading section, and 24h exam schedule).
 
 ---
 
@@ -148,7 +148,7 @@ Student Question → Retrieved Context → Generated Answer → Source/Page Numb
 * **↓ Source / Page Number:**
   > **Student Handbook, Page 3 (Chapter 3, Section 3.1 & 3.2)**
 * **↓ Factual PDF Verification:**
-  > **✅ SUPPORTED BY PDF** (Matches 10-point scale [Grade O to F] and minimum 5.00 CGPA requirement).
+  > **[SUPPORTED BY PDF]** (Matches 10-point scale [Grade O to F] and minimum 5.00 CGPA requirement).
 
 ---
 
@@ -162,7 +162,7 @@ Student Question → Retrieved Context → Generated Answer → Source/Page Numb
 * **↓ Source / Page Number:**
   > **No Relevant Match Found**
 * **↓ Factual PDF Verification:**
-  > **✅ CORRECTLY REFUSED (ZERO HALLUCINATION)** (Entity grounding confirmed `pets` and `electric scooters` do not exist in the policy document).
+  > **[CORRECTLY REFUSED - ZERO HALLUCINATION]** (Entity grounding confirmed `pets` and `electric scooters` do not exist in the policy document).
 
 ---
 
@@ -172,12 +172,12 @@ Student Question → Retrieved Context → Generated Answer → Source/Page Numb
 
 | Query ID | Student Question | Top Page Match | Cosine Similarity Score | Verification Status | Ground Truth Grounding |
 | :---: | :--- | :---: | :---: | :---: | :---: |
-| **Q1** | Minimum attendance requirement for end-semester exams | **Page 1** | **0.7952** | ✅ **Supported** | 75% mandatory, condonation to 65% |
-| **Q2** | Maximum days of academic leave allowed | **Page 4** | **0.8044** | ✅ **Supported** | 10 days/semester for conferences/sports |
-| **Q3** | Rules and penalties for examination misconduct | **Page 2** | **0.7251** | ✅ **Supported** | Cat I: Paper, Cat II: Semester, Cat III: Expulsion |
-| **Q4** | Central library operating hours | **Page 5** | **0.5339** | ✅ **Supported** | Mon-Fri 8am-11pm, Sat-Sun 9am-5pm |
-| **Q5** | Grading scale and minimum CGPA for graduation | **Page 3** | **0.7048** | ✅ **Supported** | 10-point relative scale, Min 5.00 CGPA |
-| **Q6** | Bringing pets/scooters into lecture halls *(Edge Case)* | **None** | **0.4326** *(Gated)* | ✅ **Refused** | Zero hallucination verified |
+| **Q1** | Minimum attendance requirement for end-semester exams | **Page 1** | **0.7952** | Supported | 75% mandatory, condonation to 65% |
+| **Q2** | Maximum days of academic leave allowed | **Page 4** | **0.8044** | Supported | 10 days/semester for conferences/sports |
+| **Q3** | Rules and penalties for examination misconduct | **Page 2** | **0.7251** | Supported | Cat I: Paper, Cat II: Semester, Cat III: Expulsion |
+| **Q4** | Central library operating hours | **Page 5** | **0.5339** | Supported | Mon-Fri 8am-11pm, Sat-Sun 9am-5pm |
+| **Q5** | Grading scale and minimum CGPA for graduation | **Page 3** | **0.7048** | Supported | 10-point relative scale, Min 5.00 CGPA |
+| **Q6** | Bringing pets/scooters into lecture halls *(Edge Case)* | **None** | **0.4326** *(Gated)* | Refused | Zero hallucination verified |
 
 ---
 

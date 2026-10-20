@@ -109,7 +109,7 @@ Evaluated across standard pre-trained Torchvision weights on ImageNet-1k input d
    - **AlexNet** has the highest raw throughput ($720.1$ FPS, $1.39$ ms) due to its shallow 8-layer depth, but has limited representational accuracy ($56.52\%$).
    - **InceptionNet** achieves near-AlexNet speed ($657.9$ FPS, $1.52$ ms)—over **$4.2\times$ faster than VGG-16**—while delivering modern classification accuracy ($69.78\%$).
    - **VGG-16** is the slowest ($6.48$ ms, $154.4$ FPS) because intermediate feature maps with 512 channels across large spatial grids demand massive memory bandwidth.
-   - **ResNet-50** defines the optimal operating point on the Pareto frontier: $269.4$ FPS ($3.71$ ms) with state-of-the-art accuracy ($76.13\%$).
+   - **ResNet-50** defines the optimal operating point on the Pareto frontier: $269.4$ FPS ($3.71$ ms) with the highest accuracy ($76.13\%$).
 
 3. **Memory and Deployment Suitability**:
    - **Mobile / Edge Deployment**: InceptionNet ($25.27$ MB) and ResNet-50 ($97.49$ MB) are ideal candidates due to their small memory footprints and absence of parameter-dense FC heads.

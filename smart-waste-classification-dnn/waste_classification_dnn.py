@@ -62,7 +62,7 @@ set_seed(42)
 
 physical_devices = tf.config.list_physical_devices('GPU')
 if physical_devices:
-    print(f"✅ GPU Detected: {physical_devices[0]}")
+    print(f" GPU Detected: {physical_devices[0]}")
 else:
     print("ℹ️ Running on CPU (Free tier Colab default). Code runs fast and smoothly.")
 
@@ -81,7 +81,7 @@ def extract_target_classes_from_source(source_root, target_dir=DATASET_DIR, coun
         "organic": ["organic waste", "organic"]
     }
     
-    print(f"\n📂 Scanning '{source_root}' for the 4 target waste classes...")
+    print(f"\n Scanning '{source_root}' for the 4 target waste classes...")
     all_dirs = []
     for root, dirs, _ in os.walk(source_root):
         for d in dirs:
@@ -102,7 +102,7 @@ def extract_target_classes_from_source(source_root, target_dir=DATASET_DIR, coun
                     break
                     
         if not matched_dir:
-            print(f"⚠️ Warning: Could not locate directory for '{cls}'.")
+            print(f"️ Warning: Could not locate directory for '{cls}'.")
             continue
             
         candidates = [f for f in os.listdir(matched_dir) if f.lower().endswith(('.jpg', '.jpeg', '.png'))]
@@ -124,15 +124,15 @@ def extract_target_classes_from_source(source_root, target_dir=DATASET_DIR, coun
             except Exception:
                 continue
                 
-        print(f"   ✅ '{cls}': Extracted {copied} real 224x224 photos from '{os.path.basename(matched_dir)}'")
+        print(f"    '{cls}': Extracted {copied} real 224x224 photos from '{os.path.basename(matched_dir)}'")
         
-    print(f"\n🎉 Clean 4-class dataset prepared ({count_per_class} images/class)!\n")
+    print(f"\n Clean 4-class dataset prepared ({count_per_class} images/class)!\n")
 
 def acquire_dataset():
     # 1. Check local cache from previous kagglehub download
     colab_cache = "/root/.cache/kagglehub/datasets/wasifmahmood01/custom-waste-classification-dataset/versions/1"
     if os.path.exists(colab_cache):
-        print("⚡ Reusing already downloaded Kaggle cache in Colab (Zero wait time!)...")
+        print(" Reusing already downloaded Kaggle cache in Colab (Zero wait time!)...")
         extract_target_classes_from_source(colab_cache, DATASET_DIR, IMAGES_PER_CLASS)
         return
 
@@ -140,7 +140,7 @@ def acquire_dataset():
     zip_files = [f for f in os.listdir(".") if f.endswith(".zip")]
     if zip_files:
         chosen_zip = zip_files[0]
-        print(f"📦 Found uploaded ZIP archive: '{chosen_zip}'. Extracting...")
+        print(f" Found uploaded ZIP archive: '{chosen_zip}'. Extracting...")
         extract_folder = "unpacked_kaggle_data"
         if os.path.exists(extract_folder):
             shutil.rmtree(extract_folder)
@@ -150,14 +150,14 @@ def acquire_dataset():
         return
 
     # 3. Download via kagglehub if running fresh
-    print("🌐 Downloading dataset via kagglehub...")
+    print(" Downloading dataset via kagglehub...")
     try:
         import kagglehub
         path = kagglehub.dataset_download("wasifmahmood01/custom-waste-classification-dataset")
         extract_target_classes_from_source(path, DATASET_DIR, IMAGES_PER_CLASS)
         return
     except Exception as e:
-        print(f"❌ Error downloading via kagglehub: {e}")
+        print(f" Error downloading via kagglehub: {e}")
         sys.exit(1)
 
 acquire_dataset()
@@ -199,7 +199,7 @@ def create_dataset_splits(source_dir=DATASET_DIR, dest_dir=SPLIT_DIR, train_rati
         for f in test_files:
             shutil.copy(os.path.join(cls_src, f), os.path.join(dest_dir, "test", cls, f))
             
-    print("📊 Dataset Split Summary:")
+    print(" Dataset Split Summary:")
     for split in ["train", "val", "test"]:
         counts = [len(os.listdir(os.path.join(dest_dir, split, c))) for c in CLASSES]
         print(f"   - {split.upper():5s} Set: {sum(counts):2d} images {dict(zip(CLASSES, counts))}")
@@ -296,7 +296,7 @@ model.summary()
 # 6. Two-Stage Training (Stage 1: Head Warmup -> Stage 2: Fine-Tuning)
 # ---------------------------------------------------------------------------
 # STAGE 1: Train the classification head
-print("\n🚀 Stage 1: Training Deep Classification Head (Backbone Frozen)...")
+print("\n Stage 1: Training Deep Classification Head (Backbone Frozen)...")
 model.compile(
     optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
     loss="categorical_crossentropy",
@@ -317,7 +317,7 @@ history1 = model.fit(
 )
 
 # STAGE 2: Fine-tune top 25 layers of MobileNetV2
-print("\n🎯 Stage 2: Fine-Tuning Top Layers for High Waste Discrimation...")
+print("\n Stage 2: Fine-Tuning Top Layers for High Waste Discrimation...")
 base_model.trainable = True
 # Freeze all layers except the last 25
 for layer in base_model.layers[:-25]:
@@ -351,9 +351,9 @@ combined_val_loss = history1.history['val_loss'] + history2.history['val_loss']
 # ---------------------------------------------------------------------------
 # 7. Model Evaluation & Performance Curves
 # ---------------------------------------------------------------------------
-print("\n📈 Evaluating on Independent Test Dataset (15%)...")
+print("\n Evaluating on Independent Test Dataset (15%)...")
 test_loss, test_acc = model.evaluate(test_ds, verbose=1)
-print(f"\n🎯 Final Test Accuracy: {test_acc * 100:.2f}% | Test Loss: {test_loss:.4f}")
+print(f"\n Final Test Accuracy: {test_acc * 100:.2f}% | Test Loss: {test_loss:.4f}")
 
 # Plot Training & Validation Loss & Accuracy curves
 fig, axes = plt.subplots(1, 2, figsize=(14, 5))
@@ -396,7 +396,7 @@ for images, labels in test_ds:
 y_true = np.array(y_true)
 y_pred = np.argmax(np.array(y_pred_probs), axis=1)
 
-print("\n📋 Detailed Classification Report:")
+print("\n Detailed Classification Report:")
 print(classification_report(y_true, y_pred, target_names=CLASSES, zero_division=0))
 
 # Confusion Matrix Heatmap
@@ -443,4 +443,4 @@ plt.show()
 
 # Save trained model weights
 model.save("waste_classification_dnn_model.keras")
-print("\n💾 Model successfully exported to 'waste_classification_dnn_model.keras'!")
+print("\n Model successfully exported to 'waste_classification_dnn_model.keras'!")

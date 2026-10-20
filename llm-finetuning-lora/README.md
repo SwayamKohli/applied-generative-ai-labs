@@ -59,9 +59,9 @@ where:
 
 | Component | Layer Type | Dimensions | Total Parameters | Trainable Status |
 | :--- | :--- | :---: | :---: | :---: |
-| **Base Transformer Backbone** | Embedding + RMSNorm + MLP + Output | $2048 \times 2048$ | **1,100,048,384** | ❄️ **Frozen (0%)** |
-| **LoRA Adapter ($q\_proj, k\_proj$)** | Low-Rank Matrices ($r=16$) | $2048 \times 16 + 16 \times 2048$ | **1,048,576** | 🔥 **Trainable** |
-| **LoRA Adapter ($v\_proj, o\_proj$)** | Low-Rank Matrices ($r=16$) | $2048 \times 16 + 16 \times 2048$ | **1,048,576** | 🔥 **Trainable** |
+| **Base Transformer Backbone** | Embedding + RMSNorm + MLP + Output | $2048 \times 2048$ | **1,100,048,384** | [Frozen] **Frozen (0%)** |
+| **LoRA Adapter ($q\_proj, k\_proj$)** | Low-Rank Matrices ($r=16$) | $2048 \times 16 + 16 \times 2048$ | **1,048,576** | [Trainable] **Trainable** |
+| **LoRA Adapter ($v\_proj, o\_proj$)** | Low-Rank Matrices ($r=16$) | $2048 \times 16 + 16 \times 2048$ | **1,048,576** | [Trainable] **Trainable** |
 | **Total Model Footprint** | All Layers | — | **1,102,276,608** | **0.202% Trainable** |
 
 > **Zero Inference Latency:** Following fine-tuning, the low-rank weights can be merged directly into the base weights via $W_{\text{merged}} = W_0 + \frac{\alpha}{r}(BA)$, incurring **0 ms** runtime overhead during deployment.
@@ -120,8 +120,8 @@ The original unadapted base model (`TinyLlama-1.1B-Chat`) and the fine-tuned mod
 
 | Model Variant | Generated Response | Analysis |
 | :--- | :--- | :--- |
-| 🔴 **Original Base Model** *(Before Fine-Tuning)* | *"LoRA rank (LoRaWAN) and alpha (LoRa) are two different radio frequency (RF) standards used in the LoRa technology. LoRa rank is a standard used for LoRaWAN networks, while alpha is used for LoRa networks. LoRa rank is a lower-power version of LoRaWAN that is designed for low-power applications. It uses a lower frequency (12.5 kHz) and shorter data rate (125 kbps)..."* | **Severe Hallucination:** Completely confused the deep learning PEFT technique with the wireless IoT Long Range (LoRaWAN) communication protocol. |
-| 🟢 **Fine-Tuned Model** *(With LoRA Adapter)* | *"LoRA rank is a metric that measures the similarity between the top-ranked query and the top-ranked document. alpha is a hyperparameter that controls the relative importance of the query and document scores. A high alpha value (e.g., 10) means that the query and document scores are equally weighted. A low alpha value (e.g., 0.1) means that the query score is more important than the document score."* | **Domain Shift:** Eliminated telecommunications/RF hallucinations completely; shifted representation space to machine learning ranking, scoring, and hyperparameter weighting. |
+| [Frozen] **Original Base Model** *(Before Fine-Tuning)* | *"LoRA rank (LoRaWAN) and alpha (LoRa) are two different radio frequency (RF) standards used in the LoRa technology. LoRa rank is a standard used for LoRaWAN networks, while alpha is used for LoRa networks. LoRa rank is a lower-power version of LoRaWAN that is designed for low-power applications. It uses a lower frequency (12.5 kHz) and shorter data rate (125 kbps)..."* | **Severe Hallucination:** Completely confused the deep learning PEFT technique with the wireless IoT Long Range (LoRaWAN) communication protocol. |
+| [Trainable] **Fine-Tuned Model** *(With LoRA Adapter)* | *"LoRA rank is a metric that measures the similarity between the top-ranked query and the top-ranked document. alpha is a hyperparameter that controls the relative importance of the query and document scores. A high alpha value (e.g., 10) means that the query and document scores are equally weighted. A low alpha value (e.g., 0.1) means that the query score is more important than the document score."* | **Domain Shift:** Eliminated telecommunications/RF hallucinations completely; shifted representation space to machine learning ranking, scoring, and hyperparameter weighting. |
 
 ---
 
@@ -130,8 +130,8 @@ The original unadapted base model (`TinyLlama-1.1B-Chat`) and the fine-tuned mod
 
 | Model Variant | Generated Response | Analysis |
 | :--- | :--- | :--- |
-| 🔴 **Original Base Model** *(Before Fine-Tuning)* | *"KV Caching is a technique used in autoregressive text generation to reduce computational complexity. It involves caching the most recent KV pairs (key-value pairs) in memory to speed up the generation process. The idea behind KV Caching is to store the most recent KV pairs in memory, which can be accessed quickly when generating new words. This reduces the need to repeatedly compute the KV pairs, which can be computationally expensive..."* | Verbose and repetitive; correctly notes caching keys and values, but lacks precise architectural details. |
-| 🟢 **Fine-Tuned Model** *(With LoRA Adapter)* | *"KV Caching reduces computational complexity by caching the intermediate results of the autoregressive decoder, which are only used once during the autoregressive generation. This reduces the number of intermediate computations required by the autoregressive decoder, and thus reduces the computational complexity of autoregressive generation."* | **Concise & Focused:** Directly targets autoregressive decoder intermediate computations and avoids excessive verbosity. |
+| [Frozen] **Original Base Model** *(Before Fine-Tuning)* | *"KV Caching is a technique used in autoregressive text generation to reduce computational complexity. It involves caching the most recent KV pairs (key-value pairs) in memory to speed up the generation process. The idea behind KV Caching is to store the most recent KV pairs in memory, which can be accessed quickly when generating new words. This reduces the need to repeatedly compute the KV pairs, which can be computationally expensive..."* | Verbose and repetitive; correctly notes caching keys and values, but lacks precise architectural details. |
+| [Trainable] **Fine-Tuned Model** *(With LoRA Adapter)* | *"KV Caching reduces computational complexity by caching the intermediate results of the autoregressive decoder, which are only used once during the autoregressive generation. This reduces the number of intermediate computations required by the autoregressive decoder, and thus reduces the computational complexity of autoregressive generation."* | **Concise & Focused:** Directly targets autoregressive decoder intermediate computations and avoids excessive verbosity. |
 
 ---
 
@@ -140,8 +140,8 @@ The original unadapted base model (`TinyLlama-1.1B-Chat`) and the fine-tuned mod
 
 | Model Variant | Generated Response | Analysis |
 | :--- | :--- | :--- |
-| 🔴 **Original Base Model** *(Before Fine-Tuning)* | *"Label masking with -100 is used when training an LLM on instruction datasets because it helps the LLM to learn the correct label for each input token. In the case of instruction datasets, the labels are usually provided as one-hot vectors, where each element represents the label for a specific token. When the LLM is trained on these one-hot vectors, it can easily distinguish between the correct label and the incorrect label..."* | Flawed reasoning regarding one-hot vectors and token labels, drifting off-topic before truncation. |
-| 🟢 **Fine-Tuned Model** *(With LoRA Adapter)* | *"Label masking with -100 is used to prevent the LLM from predicting the target token when the input token is not in the vocabulary. This prevents the LLM from predicting the target token when the input token is not in the training data."* | Grounded in vocabulary token target prevention and PyTorch training loss mechanics. |
+| [Frozen] **Original Base Model** *(Before Fine-Tuning)* | *"Label masking with -100 is used when training an LLM on instruction datasets because it helps the LLM to learn the correct label for each input token. In the case of instruction datasets, the labels are usually provided as one-hot vectors, where each element represents the label for a specific token. When the LLM is trained on these one-hot vectors, it can easily distinguish between the correct label and the incorrect label..."* | Flawed reasoning regarding one-hot vectors and token labels, drifting off-topic before truncation. |
+| [Trainable] **Fine-Tuned Model** *(With LoRA Adapter)* | *"Label masking with -100 is used to prevent the LLM from predicting the target token when the input token is not in the vocabulary. This prevents the LLM from predicting the target token when the input token is not in the training data."* | Grounded in vocabulary token target prevention and PyTorch training loss mechanics. |
 
 ---
 
@@ -150,8 +150,8 @@ The original unadapted base model (`TinyLlama-1.1B-Chat`) and the fine-tuned mod
 
 | Model Variant | Generated Response | Analysis |
 | :--- | :--- | :--- |
-| 🔴 **Original Base Model** *(Before Fine-Tuning)* | *"There are several differences between LoRA (Low-Power Wide-Area Network) and QLoRA (Quadruple LoRa): 1. Bandwidth: LoRA operates in the 915 MHz to 928 MHz band, while QLoRA operates in the 868 MHz to 915 MHz band. 2. Frequency: LoRA operates at 868 MHz, while QLoRA operates at 915 MHz. 3. Data rate: LoRA operates at a data rate of 125 kbps..."* | **Severe Hallucination:** Conflated QLoRA with "Quadruple LoRa" operating on radio frequency spectra (868 MHz to 915 MHz). |
-| 🟢 **Fine-Tuned Model** *(With LoRA Adapter)* | *"QLoRA uses a quadratic loss function, while standard LoRA uses a linear loss function. QLoRA also uses a quadratic regularization term, while standard LoRA uses a linear regularization term."* | **Domain Shift:** Completely purged the radio frequency / megahertz hallucinations, interpreting the adaptation within mathematical loss and optimization frameworks. |
+| [Frozen] **Original Base Model** *(Before Fine-Tuning)* | *"There are several differences between LoRA (Low-Power Wide-Area Network) and QLoRA (Quadruple LoRa): 1. Bandwidth: LoRA operates in the 915 MHz to 928 MHz band, while QLoRA operates in the 868 MHz to 915 MHz band. 2. Frequency: LoRA operates at 868 MHz, while QLoRA operates at 915 MHz. 3. Data rate: LoRA operates at a data rate of 125 kbps..."* | **Severe Hallucination:** Conflated QLoRA with "Quadruple LoRa" operating on radio frequency spectra (868 MHz to 915 MHz). |
+| [Trainable] **Fine-Tuned Model** *(With LoRA Adapter)* | *"QLoRA uses a quadratic loss function, while standard LoRA uses a linear loss function. QLoRA also uses a quadratic regularization term, while standard LoRA uses a linear regularization term."* | **Domain Shift:** Completely purged the radio frequency / megahertz hallucinations, interpreting the adaptation within mathematical loss and optimization frameworks. |
 
 ---
 
@@ -169,7 +169,7 @@ All fine-tuning artifacts and evaluation logs are persisted in the module folder
 
 ## 7. How to Run in Google Colab (Step-by-Step)
 
-The training pipeline is **100% free-tier compatible** and optimized for Google Colab's free T4 GPU:
+The training pipeline runs on Google Colab using a standard T4 GPU:
 
 1. Open [Google Colab](https://colab.research.google.com/).
 2. Select **Runtime > Change runtime type > T4 GPU**.

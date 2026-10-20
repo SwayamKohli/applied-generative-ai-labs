@@ -52,9 +52,9 @@ def ensure_dependencies():
             missing.append(pkg)
             
     if missing and "google.colab" in sys.modules:
-        print(f"📦 Installing required open-source packages: {' '.join(missing)}...")
+        print(f" Installing required open-source packages: {' '.join(missing)}...")
         os.system(f"{sys.executable} -m pip install -q {' '.join(missing)}")
-        print("✅ Installation complete!\n")
+        print(" Installation complete!\n")
 
 ensure_dependencies()
 
@@ -71,10 +71,10 @@ def create_official_student_handbook_pdf(pdf_path=HANDBOOK_PDF_PATH):
     Guarantees the script is 100% self-contained if no external PDF is provided.
     """
     if os.path.exists(pdf_path) and os.path.getsize(pdf_path) > 1000:
-        print(f"📄 Found existing Student Handbook: '{pdf_path}' ({os.path.getsize(pdf_path):,} bytes).")
+        print(f" Found existing Student Handbook: '{pdf_path}' ({os.path.getsize(pdf_path):,} bytes).")
         return pdf_path
 
-    print(f"📝 Generating official University Student Handbook PDF at '{pdf_path}'...")
+    print(f" Generating official University Student Handbook PDF at '{pdf_path}'...")
     pages_data = [
         (
             "CHAPTER 1: ACADEMIC REGULATIONS & ATTENDANCE POLICY",
@@ -273,7 +273,7 @@ def create_official_student_handbook_pdf(pdf_path=HANDBOOK_PDF_PATH):
             f.write(f"{xref_offsets[oid]:010d} 00000 n \n".encode("latin1"))
         f.write(f"trailer\n<< /Size {len(obj_defs)+1} /Root 1 0 R >>\nstartxref\n{xref_start}\n%%EOF\n".encode("latin1"))
 
-    print(f"✅ Generated 6-page Student Handbook PDF ({os.path.getsize(pdf_path):,} bytes).")
+    print(f" Generated 6-page Student Handbook PDF ({os.path.getsize(pdf_path):,} bytes).")
     return pdf_path
 
 # ---------------------------------------------------------------------------
@@ -284,7 +284,7 @@ def load_and_extract_pdf_pages(pdf_path):
     Extracts text from each page of the PDF along with metadata.
     Tries pypdf first; falls back to pure-Python stream regex parser.
     """
-    print(f"\n📖 [Step 1] Loading document from: '{pdf_path}'...")
+    print(f"\n [Step 1] Loading document from: '{pdf_path}'...")
     pages = []
 
     # Method A: Try pypdf
@@ -295,7 +295,7 @@ def load_and_extract_pdf_pages(pdf_path):
             text = page.extract_text() or ""
             if text.strip():
                 pages.append({"page_number": i + 1, "text": text.strip(), "source": os.path.basename(pdf_path)})
-        print(f"   ✅ Parsed with pypdf: Extracted {len(pages)} pages.")
+        print(f"    Parsed with pypdf: Extracted {len(pages)} pages.")
         return pages
     except Exception as e:
         print(f"   ℹ️ pypdf parser notice ({e}). Using pure-Python stream extractor...")
@@ -315,7 +315,7 @@ def load_and_extract_pdf_pages(pdf_path):
             if cleaned_text.strip():
                 pages.append({"page_number": page_idx, "text": cleaned_text.strip(), "source": os.path.basename(pdf_path)})
 
-    print(f"   ✅ Pure-Python Parser: Extracted {len(pages)} pages successfully.")
+    print(f"    Pure-Python Parser: Extracted {len(pages)} pages successfully.")
     return pages
 
 # ---------------------------------------------------------------------------
@@ -332,7 +332,7 @@ def chunk_document_pages(pages, chunk_size=550, chunk_overlap=100):
     Hierarchical, section-aware chunking tailored for university policy documents.
     Preserves parent chapter context for each subsection to maximize semantic retrieval accuracy.
     """
-    print(f"\n✂️ [Step 2] Chunking document with hierarchical section-aware parsing...")
+    print(f"\n️ [Step 2] Chunking document with hierarchical section-aware parsing...")
     chunks = []
     chunk_id_counter = 1
 
@@ -361,7 +361,7 @@ def chunk_document_pages(pages, chunk_size=550, chunk_overlap=100):
             })
             chunk_id_counter += 1
 
-    print(f"   ✅ Created {len(chunks)} high-quality semantic chunks across {len(pages)} pages.")
+    print(f"    Created {len(chunks)} high-quality semantic chunks across {len(pages)} pages.")
     return chunks
 
 # ---------------------------------------------------------------------------
@@ -431,9 +431,9 @@ class MiniRAGVectorStore:
     def _init_encoder(self):
         try:
             from sentence_transformers import SentenceTransformer
-            print(f"🧠 Loading embedding model: '{self.model_name}'...")
+            print(f" Loading embedding model: '{self.model_name}'...")
             self.encoder = SentenceTransformer(self.model_name)
-            print("   ✅ Embedding model loaded successfully (384-dimensional dense vectors).")
+            print("    Embedding model loaded successfully (384-dimensional dense vectors).")
         except Exception as e:
             print(f"   ℹ️ SentenceTransformer not loaded ({e}). Using optimized pure-Python TF-IDF vectorizer fallback.")
             self.encoder = None
@@ -450,7 +450,7 @@ class MiniRAGVectorStore:
 
     def build_and_index(self, chunks):
         """Indexes all document chunks into FAISS vector store."""
-        print(f"\n⚡ [Step 3 & 4] Converting {len(chunks)} chunks into embeddings and indexing...")
+        print(f"\n [Step 3 & 4] Converting {len(chunks)} chunks into embeddings and indexing...")
         self.chunks = chunks
         texts = [c["text"] for c in chunks]
 
@@ -463,7 +463,7 @@ class MiniRAGVectorStore:
             self.index = faiss.IndexFlatIP(dimension)
             self.index.add(self.embeddings)
             self.use_faiss = True
-            print(f"   ✅ Indexed {self.index.ntotal} vectors in FAISS IndexFlatIP (Dimension: {dimension}).")
+            print(f"    Indexed {self.index.ntotal} vectors in FAISS IndexFlatIP (Dimension: {dimension}).")
         except Exception as e:
             print(f"   ℹ️ FAISS not detected ({e}). Using NumPy vectorized cosine similarity engine.")
             self.use_faiss = False
@@ -479,11 +479,11 @@ class MiniRAGVectorStore:
             import faiss
             faiss_path = os.path.join(directory, "handbook_index.faiss")
             faiss.write_index(self.index, faiss_path)
-            print(f"💾 Persisted FAISS index & metadata to '{directory}/'")
+            print(f" Persisted FAISS index & metadata to '{directory}/'")
         else:
             emb_path = os.path.join(directory, "embeddings.npy")
             np.save(emb_path, self.embeddings)
-            print(f"💾 Persisted NumPy index & metadata to '{directory}/'")
+            print(f" Persisted NumPy index & metadata to '{directory}/'")
 
     def retrieve(self, query, top_k=3):
         """Retrieves top-k chunks ranked by semantic cosine similarity."""
@@ -537,7 +537,7 @@ class GroundedLLMGenerator:
                 genai.configure(api_key=os.environ["GEMINI_API_KEY"])
                 self.gemini_model = genai.GenerativeModel("gemini-1.5-flash")
                 self.use_gemini = True
-                print("🌟 Google Gemini API detected. Using Gemini 1.5 Flash for RAG generation.")
+                print(" Google Gemini API detected. Using Gemini 1.5 Flash for RAG generation.")
                 return
             except Exception:
                 pass
@@ -545,14 +545,14 @@ class GroundedLLMGenerator:
         # Load local Hugging Face model
         try:
             from transformers import pipeline
-            print(f"🤖 Loading free local generation model: '{self.model_name}'...")
+            print(f" Loading free local generation model: '{self.model_name}'...")
             self.pipeline = pipeline(
                 "text2text-generation",
                 model=self.model_name,
                 max_new_tokens=180,
                 temperature=0.1
             )
-            print("   ✅ Local LLM generation pipeline initialized.")
+            print("    Local LLM generation pipeline initialized.")
         except Exception as e:
             print(f"   ℹ️ Transformers pipeline notice ({e}). Using extractive QA synthesizer.")
             self.pipeline = None
@@ -686,7 +686,7 @@ def run_rag_demonstration(vector_store, generator):
     and verifies answer fidelity against ground truth PDF facts.
     """
     print("\n" + "=" * 80)
-    print("🎓 DEMONSTRATING RAG STUDENT ASSISTANT ON 6 DIVERSE QUERIES")
+    print(" DEMONSTRATING RAG STUDENT ASSISTANT ON 6 DIVERSE QUERIES")
     print("=" * 80)
 
     results = []
@@ -709,33 +709,33 @@ def run_rag_demonstration(vector_store, generator):
         # Verification logic
         if expected_page is not None:
             is_supported = (expected_page in retrieved_pages)
-            verdict = "✅ SUPPORTED BY PDF" if is_supported else "⚠️ PARTIAL RETRIEVAL"
+            verdict = "[SUPPORTED BY PDF]" if is_supported else "️ PARTIAL RETRIEVAL"
         else:
             # Out of domain check
             refusal_markers = ["not provide", "not contain", "does not contain", "absent", "unsupported"]
             is_supported = any(m in generated_answer.lower() for m in refusal_markers)
-            verdict = "✅ CORRECTLY REFUSED (ZERO HALLUCINATION)" if is_supported else "⚠️ UNGROUNDED"
+            verdict = "[CORRECTLY REFUSED - ZERO HALLUCINATION]" if is_supported else "️ UNGROUNDED"
 
         print(f"\n[QUERY {q_id}]")
         print(f"Student Question:")
-        print(f"   👉 \"{question}\"")
+        print(f"    \"{question}\"")
         print(f"↓")
         print(f"Retrieved Context:")
         for r in retrieved:
             chunk = r["chunk"]
             score = r["similarity_score"]
             snippet = chunk["text"].replace("\n", " ")[:160] + "..."
-            print(f"   📄 [Page {chunk['page_number']} | Score: {score:.4f}] {snippet}")
+            print(f"    [Page {chunk['page_number']} | Score: {score:.4f}] {snippet}")
         print(f"↓")
         print(f"Generated Answer:")
-        print(f"   🤖 \"{generated_answer}\"")
+        print(f"    \"{generated_answer}\"")
         print(f"↓")
         print(f"Source / Page Number:")
-        print(f"   📌 Handbook Page(s): {list(set(retrieved_pages))} | Primary Match: Page {top_page}")
+        print(f"    Handbook Page(s): {list(set(retrieved_pages))} | Primary Match: Page {top_page}")
         print(f"↓")
         print(f"Factual PDF Verification:")
-        print(f"   🎯 Status: {verdict}")
-        print(f"   📖 Expected Reference: {ground_truth}")
+        print(f"    Status: {verdict}")
+        print(f"    Expected Reference: {ground_truth}")
         print("-" * 80)
 
         results.append({
@@ -752,7 +752,7 @@ def run_rag_demonstration(vector_store, generator):
     # Save evaluation benchmark
     with open(OUTPUT_METRICS_PATH, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2)
-    print(f"\n📊 Evaluation metrics & audit logs saved to: '{OUTPUT_METRICS_PATH}'")
+    print(f"\n Evaluation metrics & audit logs saved to: '{OUTPUT_METRICS_PATH}'")
     return results
 
 # ---------------------------------------------------------------------------
@@ -773,7 +773,7 @@ def package_rag_artifacts():
                     arc_path = os.path.relpath(file_path, ".")
                     zipf.write(file_path, arcname=arc_path)
 
-    print(f"📦 Bundled all RAG artifacts into: '{zip_filename}' ({os.path.getsize(zip_filename):,} bytes).")
+    print(f" Bundled all RAG artifacts into: '{zip_filename}' ({os.path.getsize(zip_filename):,} bytes).")
     
     # Colab one-click download trigger
     if "google.colab" in sys.modules:
@@ -789,7 +789,7 @@ def package_rag_artifacts():
 # ---------------------------------------------------------------------------
 def main():
     print("=" * 80)
-    print("🏛️ UNIVERSITY STUDENT HANDBOOK RAG ASSISTANT PIPELINE")
+    print("️ UNIVERSITY STUDENT HANDBOOK RAG ASSISTANT PIPELINE")
     print("=" * 80)
 
     # 1. Prepare PDF
@@ -815,7 +815,7 @@ def main():
     # 7. Package Downloadable Artifacts
     package_rag_artifacts()
 
-    print("\n🎉 Mini-RAG System execution complete! All requirements verified.")
+    print("\n Mini-RAG System execution complete! All requirements verified.")
 
 if __name__ == "__main__":
     main()
